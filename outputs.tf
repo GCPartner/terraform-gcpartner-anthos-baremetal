@@ -1,0 +1,30 @@
+output "ssh_command" {
+  value       = format("ssh -i %s %s@%s", pathexpand(format("~/.ssh/%s", local.ssh_key_name)), local.username, local.bastion_ip)
+  description = "Command to run to SSH into the bastion host"
+}
+
+output "ssh_key_path" {
+  value       = pathexpand(format("~/.ssh/%s", local.ssh_key_name))
+  description = "Path to the SSH Private key for the bastion host"
+}
+
+output "bastion_host_ip" {
+  value       = local.bastion_ip
+  description = "IP Address of the bastion host in the test enviorment"
+}
+
+output "bastion_host_username" {
+  value       = local.username
+  description = "Username for the bastion host in the test enviorment"
+}
+
+
+output "pnap_cp_nodes" {
+  value       = module.PNAP_Infra.0.cp_node_ips
+  description = ""
+}
+
+output "pnap_worker_nodes" {
+  value       = module.PNAP_Infra.0.worker_node_ips
+  description = ""
+}
