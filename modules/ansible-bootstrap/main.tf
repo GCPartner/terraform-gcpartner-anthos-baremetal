@@ -47,6 +47,28 @@ resource "null_resource" "install_ansible" {
   }
 }
 
+resource "null_resource" "write_gcp_sa_keys" {
+  for_each = var.gcp_sa_keys
+
+  connection {
+    type        = "ssh"
+    user        = var.username
+    private_key = var.ssh_key.private_key
+    host        = var.bastion_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -p $HOME/bootstrap/gcp_keys"
+    ]
+  }
+
+  provisioner "file" {
+    content     = base64decode(each.value)
+    destination = "$HOME/bootstrap/gcp_keys/${each.key}.json"
+  }
+}
+
 resource "null_resource" "download_ansible_playbook" {
   connection {
     type        = "ssh"

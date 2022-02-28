@@ -126,7 +126,7 @@ resource "null_resource" "node_networking_worker" {
   provisioner "remote-exec" {
     inline = [
       "sudo python3 $HOME/bootstrap/node_networking.py",
-      "rm -f node_networking.py"
+      "rm -f $HOME/bootstrap/node_networking.py"
     ]
   }
 }

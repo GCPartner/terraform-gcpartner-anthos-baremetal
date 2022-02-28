@@ -60,3 +60,8 @@ variable "ansible_playbook_version" {
   type        = string
   description = "The version of the ansible playbook to install"
 }
+
+variable "gcp_sa_keys" {
+  type = any
+  description = "GCP Service Account Keys"
+}

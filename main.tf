@@ -178,4 +178,5 @@ module "Ansible_Bootstrap" {
   operating_system         = var.operating_system
   username                 = local.username
   ansible_playbook_version = var.ansible_playbook_version
+  gcp_sa_keys = module.GCP_Auth.gcp_sa_keys
 }
