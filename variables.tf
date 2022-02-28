@@ -163,22 +163,3 @@ variable "metal_billing_cycle" {
   default     = "hourly"
   description = "How the node will be billed (Not usually changed)"
 }
-
-# Storage Options
-variable "storage_module" {
-  type        = string
-  description = "The name of the storage module to enable. If set, use storage_options."
-  default     = "rook"
-}
-
-variable "storage_options" {
-  type        = any
-  description = "Options specific to the storage module. Check the documentation for the storage module for details."
-  default     = {}
-}
-
-variable "deploy_csi" {
-  type        = string
-  description = "Deploy a useable CSI driver"
-  default     = true
-}

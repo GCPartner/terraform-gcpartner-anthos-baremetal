@@ -17,14 +17,3 @@ output "bastion_host_username" {
   value       = local.username
   description = "Username for the bastion host in the test enviorment"
 }
-
-
-output "pnap_cp_nodes" {
-  value       = module.PNAP_Infra.0.cp_node_ips
-  description = ""
-}
-
-output "pnap_worker_nodes" {
-  value       = module.PNAP_Infra.0.worker_node_ips
-  description = ""
-}
