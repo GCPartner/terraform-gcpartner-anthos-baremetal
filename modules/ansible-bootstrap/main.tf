@@ -39,7 +39,7 @@ resource "null_resource" "install_ansible" {
       "$HOME/.local/bin/pip install virtualenv",
       "$HOME/.local/bin/virtualenv ansible",
       ". ansible/bin/activate",
-      "pip -q install ansible",
+      "pip -q install ansible netaddr",
       "echo '[defaults]' > $HOME/.ansible.cfg",
       "echo 'host_key_checking = False' >> $HOME/.ansible.cfg",
       "rm -f get-pip.py"
@@ -89,7 +89,7 @@ resource "null_resource" "download_ansible_playbook" {
   }
 }
 
-resource "null_resource" "write_cp_header_to_ansible_inventory" {
+resource "null_resource" "write_ansible_inventory_header" {
   depends_on = [
     null_resource.download_ansible_playbook
   ]
@@ -103,7 +103,13 @@ resource "null_resource" "write_cp_header_to_ansible_inventory" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo '[cp_nodes]' > $HOME/bootstrap/${local.git_repo_name}/inventory"
+      "echo '[all:vars]' > $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo 'private_subnet=${var.private_subnet}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo 'cluster_name=${var.cluster_name}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo 'gcp_project_id=${var.gcp_project_id}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo '[bootstrap_node]' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo '127.0.0.1' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo '[cp_nodes]' >> $HOME/bootstrap/${local.git_repo_name}/inventory"
     ]
   }
 }
@@ -111,7 +117,7 @@ resource "null_resource" "write_cp_header_to_ansible_inventory" {
 resource "null_resource" "write_cp_nodes_to_ansible_inventory" {
   count = var.cp_node_count
   depends_on = [
-    null_resource.write_cp_header_to_ansible_inventory
+    null_resource.write_ansible_inventory_header
   ]
 
   connection {

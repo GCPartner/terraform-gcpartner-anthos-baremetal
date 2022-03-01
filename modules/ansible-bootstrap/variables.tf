@@ -65,3 +65,8 @@ variable "gcp_sa_keys" {
   type = any
   description = "GCP Service Account Keys"
 }
+
+variable "gcp_project_id" {
+  type        = string
+  description = "The project ID to use (Same variable for GCP and EQM)"
+}
