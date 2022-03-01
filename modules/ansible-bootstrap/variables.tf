@@ -22,12 +22,12 @@ variable "worker_node_count" {
 }
 
 variable "cp_ips" {
-  type        = list
+  type        = list(any)
   description = "ips for control plane nodes"
 }
 
 variable "worker_ips" {
-  type        = list
+  type        = list(any)
   description = "ips for worker nodes"
 }
 
@@ -62,7 +62,7 @@ variable "ansible_playbook_version" {
 }
 
 variable "gcp_sa_keys" {
-  type = any
+  type        = any
   description = "GCP Service Account Keys"
 }
 

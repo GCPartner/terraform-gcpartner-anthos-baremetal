@@ -1,5 +1,7 @@
 locals {
-  ansible_url      = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/${var.ansible_playbook_version}.tar.gz"
+  ansible_test_url = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/heads/v0.0.1.tar.gz"
+  ansible_prod_url = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/${var.ansible_playbook_version}.tar.gz"
+  ansible_url      = coalesce(locals.ansible_test_url, locals.ansible_prod_url)
   ansible_tar_ball = "${var.ansible_playbook_version}.tar.gz"
   git_repo_name    = "ansible-gcpartner-anthos-baremetal"
 }
