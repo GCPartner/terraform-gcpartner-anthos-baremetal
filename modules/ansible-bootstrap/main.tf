@@ -113,6 +113,7 @@ resource "null_resource" "write_ansible_inventory_header" {
       "echo 'private_subnet=${var.private_subnet}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'cluster_name=${var.cluster_name}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'gcp_project_id=${var.gcp_project_id}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo home_path=$HOME >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo '[bootstrap_node]' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo '127.0.0.1' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo '[cp_nodes]' >> $HOME/bootstrap/${local.git_repo_name}/inventory"
