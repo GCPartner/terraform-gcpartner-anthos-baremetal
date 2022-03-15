@@ -116,7 +116,7 @@ resource "google_compute_instance" "cp_node" {
     google_project_service.compute_engine
   ]
   project      = local.project_id
-  name         = format("%s-%02d", var.cluster_name, count.index + 1)
+  name         = format("%s-%02d-cp-node", var.cluster_name, count.index + 1)
   machine_type = var.gcp_cp_instance_type
   zone         = var.gcp_zone
   tags         = [count.index == 0 ? "bastion" : "node"]
@@ -142,7 +142,7 @@ resource "google_compute_instance" "worker_node" {
     google_project_service.compute_engine
   ]
   project      = local.project_id
-  name         = format("%s-%02d", var.cluster_name, count.index + 1)
+  name         = format("%s-%02d-worker-node", var.cluster_name, count.index + 1)
   machine_type = var.gcp_worker_instance_type
   zone         = var.gcp_zone
   tags         = [count.index == 0 ? "bastion" : "node"]
