@@ -47,36 +47,14 @@ module "GCP_Auth" {
   gcp_project_id = var.gcp_project_id
 }
 
-/* module "EQM_Infra" {
-  source                = "./modules/equinix-metal"
-  count                 = var.cloud == "EQM" ? 1 : 0
-  metal_auth_token      = var.metal_auth_token
-  metal_organization_id = var.organization_id
-  create_project        = var.create_project
-  project_name          = var.project_name
-  project_id            = var.project_id
-  cp_node_count         = local.cp_node_count
-  worker_node_count     = var.worker_node_count
-  metal_cp_plan         = var.metal_cp_plan
-  metal_worker_plan     = var.metal_worker_plan
-  metal_facility        = var.metal_facility
-  operating_system      = var.operating_system
-  metal_billing_cycle   = var.metal_billing_cycle
-  cluster_name          = local.cluster_name
-  private_subnet        = var.private_subnet
-  ssh_key = {
-    private_key = chomp(tls_private_key.ssh_key_pair.private_key_pem)
-    public_key  = chomp(tls_private_key.ssh_key_pair.public_key_openssh)
-  }
-} */
 
-/* module "GCP_Infra" {
+module "GCP_Infra" {
   source           = "./modules/google-compute-engine"
   count            = var.cloud == "GCP" ? 1 : 0
   operating_system = var.operating_system
   create_project   = var.create_project
   project_name     = var.project_name
-  project_id       = var.project_id
+  project_id       = var.gcp_project_id
   organization_id  = var.organization_id
   ssh_key = {
     private_key = chomp(tls_private_key.ssh_key_pair.private_key_pem)
@@ -90,7 +68,7 @@ module "GCP_Auth" {
   gcp_zone                 = var.gcp_zone
   gcp_billing_account      = var.gcp_billing_account
   private_subnet           = var.private_subnet
-} */
+}
 
 module "PNAP_Infra" {
   source = "./modules/phoenixnap"
@@ -117,16 +95,16 @@ locals {
   gcp_user   = var.cloud == "GCP" ? module.GCP_Infra.0.username : ""
   pnap_user  = var.cloud == "PNAP" ? module.PNAP_Infra.0.username : "" */
   eqm_ip          = ""
-  gcp_ip          = ""
+  gcp_ip          = var.cloud == "GCP" ? module.GCP_Infra.0.bastion_ip : ""
   pnap_ip         = var.cloud == "PNAP" ? module.PNAP_Infra.0.bastion_ip : ""
   eqm_user        = ""
-  gcp_user        = ""
+  gcp_user        = var.cloud == "GCP" ? module.GCP_Infra.0.username : ""
   eqm_cp_ips      = []
-  gcp_cp_ips      = []
-  pnap_cp_ips     = module.PNAP_Infra.0.cp_node_ips
+  gcp_cp_ips      = var.cloud == "GCP" ? module.GCP_Infra.0.cp_node_ips : []
+  pnap_cp_ips     = var.cloud == "PNAP" ? module.PNAP_Infra.0.cp_node_ips : []
   eqm_worker_ips  = []
-  gcp_worker_ips  = []
-  pnap_worker_ips = module.PNAP_Infra.0.worker_node_ips
+  gcp_worker_ips  = var.cloud == "GCP" ? module.GCP_Infra.0.worker_node_ips : []
+  pnap_worker_ips = var.cloud == "PNAP" ? module.PNAP_Infra.0.worker_node_ips : []
   pnap_user       = var.cloud == "PNAP" ? module.PNAP_Infra.0.username : ""
   bastion_ip      = coalesce(local.eqm_ip, local.gcp_ip, local.pnap_ip)
   username        = coalesce(local.eqm_user, local.gcp_user, local.pnap_user)
@@ -134,32 +112,11 @@ locals {
   worker_ips      = coalescelist(local.eqm_worker_ips, local.gcp_worker_ips, local.pnap_worker_ips)
 }
 
-/* module "Anthos_Private_Mode" {
-  depends_on = [
-    module.EQM_Infra,
-    module.GCP_Infra,
-    module.PNAP_Infra
-  ]
-  source = "./modules/anthos-private-mode"
-  ssh_key = {
-    private_key = chomp(tls_private_key.ssh_key_pair.private_key_pem)
-    public_key  = chomp(tls_private_key.ssh_key_pair.public_key_openssh)
-  }
-  bastion_ip          = local.bastion_ip
-  node_count          = var.node_count
-  operating_system    = var.operating_system
-  private_subnet      = var.private_subnet
-  cluster_name        = local.cluster_name
-  apm_version         = var.apm_version
-  deploy_user_cluster = var.deploy_user_cluster
-  username            = local.username
-  deploy_csi          = var.deploy_csi
-} */
 
 module "Ansible_Bootstrap" {
   depends_on = [
     #module.EQM_Infra,
-    #module.GCP_Infra,
+    module.GCP_Infra,
     module.PNAP_Infra
   ]
   source = "./modules/ansible-bootstrap"
