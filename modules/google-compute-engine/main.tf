@@ -116,7 +116,7 @@ resource "google_compute_instance" "cp_node" {
     google_project_service.compute_engine
   ]
   project      = local.project_id
-  name         = format("%s-%02d-cp-node", var.cluster_name, count.index + 1)
+  name         = format("%s-cp-%02d", var.cluster_name, count.index + 1)
   machine_type = var.gcp_cp_instance_type
   zone         = var.gcp_zone
   tags         = [count.index == 0 ? "bastion" : "node"]
@@ -142,7 +142,7 @@ resource "google_compute_instance" "worker_node" {
     google_project_service.compute_engine
   ]
   project      = local.project_id
-  name         = format("%s-%02d-worker-node", var.cluster_name, count.index + 1)
+  name         = format("%s-worker-%02d", var.cluster_name, count.index + 1)
   machine_type = var.gcp_worker_instance_type
   zone         = var.gcp_zone
   tags         = [count.index == 0 ? "bastion" : "node"]
@@ -154,12 +154,7 @@ resource "google_compute_instance" "worker_node" {
       type  = "pd-ssd"
     }
   }
-  network_interface {
-    network = google_compute_network.gpc_network.id
-    access_config {
-      nat_ip = count.index == 0 ? google_compute_address.bastion_ip.address : null
-    }
-  }
+  network_interface {}
 }
 
 resource "google_compute_attached_disk" "default" {
