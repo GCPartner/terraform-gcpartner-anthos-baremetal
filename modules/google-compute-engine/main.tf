@@ -57,7 +57,7 @@ resource "google_compute_firewall" "allow-icmp" {
   allow {
     protocol = "icmp"
   }
-  target_tags = ["bastion"]
+  target_tags   = ["bastion"]
   source_ranges = ["0.0.0.0/0"]
 }
 
@@ -71,7 +71,7 @@ resource "google_compute_firewall" "allow-ssh" {
     protocol = "tcp"
     ports    = ["22"]
   }
-  target_tags = ["bastion"]
+  target_tags   = ["bastion"]
   source_ranges = ["0.0.0.0/0"]
 }
 
@@ -234,5 +234,27 @@ resource "null_resource" "worker_node_networking" {
 
   provisioner "remote-exec" {
     inline = ["python3 $HOME/bootstrap/node_networking.py"]
+  }
+}
+
+resource "google_compute_router" "cloud-router" {
+  name    = format("%s-router", var.cluster_name)
+  region  = trim(var.gcp_zone, "-a")
+  network = google_compute_network.gpc_network.id
+  bgp {
+    asn = 64514
+  }
+}
+
+resource "google_compute_router_nat" "nat-gateway" {
+  name                               = format("%s-net-gateway", var.cluster_name)
+  router                             = google_compute_router.cloud-router.name
+  region                             = google_compute_router.cloud-router.region
+  nat_ip_allocate_option             = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+
+  log_config {
+    enable = true
+    filter = "ERRORS_ONLY"
   }
 }
