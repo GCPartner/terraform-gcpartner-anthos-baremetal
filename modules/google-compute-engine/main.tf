@@ -108,8 +108,6 @@ resource "google_compute_disk" "default" {
   size    = 10 #should be a variable
 }
 
-#FIXME: Need control plane nodes and worker nodes
-
 resource "google_compute_instance" "cp_node" {
   count = var.cp_node_count
   depends_on = [
@@ -241,6 +239,7 @@ resource "google_compute_router" "cloud-router" {
   name    = format("%s-router", var.cluster_name)
   region  = trim(var.gcp_zone, "-a")
   network = google_compute_network.gpc_network.id
+  project = local.project_id
   bgp {
     asn = 64514
   }
@@ -252,6 +251,7 @@ resource "google_compute_router_nat" "nat-gateway" {
   region                             = google_compute_router.cloud-router.region
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+  project = local.project_id
 
   log_config {
     enable = true
