@@ -154,7 +154,9 @@ resource "google_compute_instance" "worker_node" {
       type  = "pd-ssd"
     }
   }
-  network_interface {}
+  network_interface {
+    network = google_compute_network.gpc_network.id
+  }
 }
 
 resource "google_compute_attached_disk" "default" {
