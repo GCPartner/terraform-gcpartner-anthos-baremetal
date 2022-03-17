@@ -87,6 +87,29 @@ module "PNAP_Infra" {
   private_subnet    = var.private_subnet
 }
 
+#module "EQM_Infra" {
+#  source                = "./modules/equinix-metal"
+#  count                 = var.cloud == "EQM" ? 1 : 0
+#  metal_auth_token      = var.metal_auth_token
+#  metal_organization_id = var.organization_id
+#  create_project        = var.create_project
+#  project_name          = var.project_name
+#  project_id            = var.metal_project_id
+#  metal_cp_plan            = var.metal_cp_plan
+#  metal_worker_plan     = var.metal_worker_plan
+#  cp_node_count            = local.cp_node_count
+#  worker_node_count        = var.worker_node_count
+#  metal_facility        = var.metal_facility
+#  operating_system      = var.operating_system
+#  metal_billing_cycle   = var.metal_billing_cycle
+#  cluster_name          = local.cluster_name
+#  private_subnet        = var.private_subnet
+#  ssh_key = {
+#    private_key = chomp(tls_private_key.ssh_key_pair.private_key_pem)
+#    public_key  = chomp(tls_private_key.ssh_key_pair.public_key_openssh)
+#  }
+#}
+
 locals {
   /* eqm_ip     = var.cloud == "EQM" ? module.EQM_Infra.0.bastion_ip : ""
   gcp_ip     = var.cloud == "GCP" ? module.GCP_Infra.0.bastion_ip : ""
