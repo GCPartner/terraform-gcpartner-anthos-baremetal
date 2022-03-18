@@ -111,11 +111,6 @@ module "EQM_Infra" {
 }
 
 locals {
-  /* eqm_ip     = var.cloud == "EQM" ? module.EQM_Infra.0.bastion_ip : ""
-  gcp_ip     = var.cloud == "GCP" ? module.GCP_Infra.0.bastion_ip : ""
-  pnap_ip    = var.cloud == "PNAP" ? module.PNAP_Infra.0.bastion_ip : ""
-  gcp_user   = var.cloud == "GCP" ? module.GCP_Infra.0.username : ""
-  pnap_user  = var.cloud == "PNAP" ? module.PNAP_Infra.0.username : "" */
   eqm_ip          = var.cloud == "EQM" ? module.EQM_Infra.0.bastion_ip : ""
   eqm_user       = var.cloud == "EQM" ? module.EQM_Infra.0.username : ""
   eqm_cp_ips      = var.cloud == "EQM" ? module.EQM_Infra.0.cp_node_ips : []
@@ -141,7 +136,7 @@ locals {
 
 module "Ansible_Bootstrap" {
   depends_on = [
-    #module.EQM_Infra,
+    module.EQM_Infra,
     module.GCP_Infra,
     module.PNAP_Infra
   ]
