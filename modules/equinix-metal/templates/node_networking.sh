@@ -6,7 +6,7 @@ NETMASK='${netmask}'
 function ubuntu_net_config {
     mkdir -p $HOME/bootstrap/
     cp /etc/network/interfaces $HOME/bootstrap/interfaces.bak
-    nic=`ls -la /sys/class/net/ | grep pci | tail -1 | awk '{print $9}'`
+    nic=`ls -la /sys/class/net/ | grep pci | grep -v usb | tail -1 | awk '{print $9}'`
     sudo ifdown $nic
     sed -ie "/$nic/,+4d" /etc/network/interfaces
     sudo printf "\nauto $nic\n" >> /etc/network/interfaces

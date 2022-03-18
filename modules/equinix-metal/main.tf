@@ -83,8 +83,8 @@ resource "metal_port_vlan_attachment" "private_vlan_attach_worker_node" {
   vlan_vnid = metal_vlan.private_vlan.vxlan
 }
 
-data "template_file" "node_networking" {
-  count    = var.worker_node_count
+data "template_file" "cp_node_networking" {
+  count    = var.cp_node_count
   template = file("${path.module}/templates/node_networking.sh")
   vars = {
     operating_system = var.operating_system
@@ -95,12 +95,12 @@ data "template_file" "node_networking" {
 
 # cp node and worker node
 resource "null_resource" "cp_node_networking" {
-  count = var.worker_node_count
+  count = var.cp_node_count
   connection {
     type        = "ssh"
     user        = local.username
     private_key = var.ssh_key.private_key
-    host        = element(metal_device.worker_node.*.access_public_ipv4, count.index)
+    host        = element(metal_device.cp_node.*.access_public_ipv4, count.index)
   }
 
   provisioner "remote-exec" {
@@ -110,7 +110,7 @@ resource "null_resource" "cp_node_networking" {
   }
 
   provisioner "file" {
-    content     = element(data.template_file.node_networking.*.rendered, count.index)
+    content     = element(data.template_file.cp_node_networking.*.rendered, count.index)
     destination = "$HOME/bootstrap/node_networking.sh"
   }
 
@@ -118,6 +118,17 @@ resource "null_resource" "cp_node_networking" {
     inline = ["bash $HOME/bootstrap/node_networking.sh"]
   }
 }
+
+data "template_file" "worker_node_networking" {
+  count    = var.worker_node_count
+  template = file("${path.module}/templates/node_networking.sh")
+  vars = {
+    operating_system = var.operating_system
+    ip_address       = cidrhost(var.private_subnet, count.index + 4)
+    netmask          = cidrnetmask(var.private_subnet)
+  }
+}
+
 
 resource "null_resource" "worker_node_networking" {
   count = var.worker_node_count
@@ -135,7 +146,7 @@ resource "null_resource" "worker_node_networking" {
   }
 
   provisioner "file" {
-    content     = element(data.template_file.node_networking.*.rendered, count.index)
+    content     = element(data.template_file.worker_node_networking.*.rendered, count.index)
     destination = "$HOME/bootstrap/node_networking.sh"
   }
 

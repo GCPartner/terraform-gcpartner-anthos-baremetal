@@ -36,14 +36,20 @@ resource "null_resource" "install_ansible" {
     host        = var.bastion_ip
   }
 
+
   provisioner "remote-exec" {
     inline = [
+
+      "BIN_PATH=$HOME/.local/bin",
+      "if [ \"$(whoami)\" = \"root\" ]; then",
+      "BIN_PATH=/usr/local/bin",
+      "fi",
       "mkdir -p $HOME/bootstrap",
       "cd $HOME/bootstrap",
       "curl -LO https://bootstrap.pypa.io/get-pip.py",
       "python3 get-pip.py --no-warn-script-location",
-      "$HOME/.local/bin/pip install virtualenv",
-      "$HOME/.local/bin/virtualenv ansible",
+      "$BIN_PATH/pip install virtualenv",
+      "$BIN_PATH/virtualenv ansible",
       ". ansible/bin/activate",
       "pip -q install ansible netaddr",
       "echo '[defaults]' > $HOME/.ansible.cfg",
