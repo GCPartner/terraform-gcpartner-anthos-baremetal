@@ -46,7 +46,7 @@ resource "null_resource" "install_ansible" {
       "fi",
       "mkdir -p $HOME/bootstrap",
       "cd $HOME/bootstrap",
-      "curl -LO https://bootstrap.pypa.io/get-pip.py",
+      "curl -LO https://bootstrap.pypa.io/pip/3.6/get-pip.py",
       "python3 get-pip.py --no-warn-script-location",
       "$BIN_PATH/pip install virtualenv",
       "$BIN_PATH/virtualenv ansible",

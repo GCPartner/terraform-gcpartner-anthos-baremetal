@@ -14,7 +14,7 @@ resource "google_project" "new_project" {
 }
 
 locals {
-  os_image   = var.operating_system == "ubuntu_20_04" ? "ubuntu-os-cloud/ubuntu-2004-lts" : ""
+  os_image   = var.operating_system == "ubuntu_20_04" ? "ubuntu-os-cloud/ubuntu-2004-lts" : "rhel-cloud/rhel-8"
   project_id = var.create_project ? google_project.new_project.0.project_id : var.project_id
   username   = "gpc"
 }
