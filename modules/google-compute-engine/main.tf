@@ -14,9 +14,11 @@ resource "google_project" "new_project" {
 }
 
 locals {
-  os_image   = var.operating_system == "ubuntu_20_04" ? "ubuntu-os-cloud/ubuntu-2004-lts" : "rhel-cloud/rhel-8"
-  project_id = var.create_project ? google_project.new_project.0.project_id : var.project_id
-  username   = "gpc"
+  os_image_ubuntu = var.operating_system == "ubuntu_20_04" ? "ubuntu-os-cloud/ubuntu-2004-lts" : ""
+  os_image_rhel   = var.operating_system == "rhel_8" ? "rhel-cloud/rhel-8" : ""
+  os_image        = coalesce(local.os_image_ubuntu, local.os_image_rhel)
+  project_id      = var.create_project ? google_project.new_project.0.project_id : var.project_id
+  username        = "gpc"
 }
 
 resource "google_project_service" "compute_engine" {
@@ -251,7 +253,7 @@ resource "google_compute_router_nat" "nat-gateway" {
   region                             = google_compute_router.cloud-router.region
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
-  project = local.project_id
+  project                            = local.project_id
 
   log_config {
     enable = true

@@ -47,6 +47,7 @@ resource "null_resource" "install_ansible" {
       "mkdir -p $HOME/bootstrap",
       "cd $HOME/bootstrap",
       "curl -LO https://bootstrap.pypa.io/pip/3.6/get-pip.py",
+      "(which python3>/dev/null 2>&1) || (apt install python3 -y>/dev/null 2>&1) || (dnf install python3 -y>/dev/null 2>&1)",
       "python3 get-pip.py --no-warn-script-location",
       "$BIN_PATH/pip install virtualenv",
       "$BIN_PATH/virtualenv ansible",
@@ -191,6 +192,8 @@ resource "null_resource" "write_worker_nodes_to_ansible_inventory" {
   }
 }
 
+# FIXME: run in while loop, 3 times
+# FIXME: if exit code is non zero, run it again, max 3 times
 resource "null_resource" "execute_ansible" {
   connection {
     type        = "ssh"
@@ -207,9 +210,17 @@ resource "null_resource" "execute_ansible" {
 
   provisioner "remote-exec" {
     inline = [
+      "start=3",
+      "while [ $start -gt 0 ]",
+      "do",
       ". $HOME/bootstrap/ansible/bin/activate",
       "cd $HOME/bootstrap/${local.git_repo_name}",
-      "ansible-playbook -i inventory site.yaml -b",
+      "/usr/bin/timeout 1800 ansible-playbook -i inventory site.yaml -b",
+      "if [ $? -eq 0 ]; then",
+      "break",
+      "fi",
+      "start=$((start-1))",
+      "done",
     ]
   }
 }
