@@ -1,13 +1,12 @@
 locals {
-  ansible_test_url      = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/heads/v0.0.1.tar.gz"
-  ansible_prod_url      = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/${var.ansible_playbook_version}.tar.gz"
-  ansible_url           = coalesce(local.ansible_test_url, local.ansible_prod_url)
-  ansible_test_tar_ball = "v0.0.1.tar.gz"
-  ansible_prod_tar_ball = "${var.ansible_playbook_version}.tar.gz"
-  ansible_tar_ball      = coalesce(local.ansible_test_tar_ball, local.ansible_prod_tar_ball)
-
-
-  git_repo_name = "ansible-gcpartner-anthos-baremetal"
+  ansible_test_url        = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/heads/v0.0.1.tar.gz"
+  ansible_prod_url        = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/${var.ansible_playbook_version}.tar.gz"
+  ansible_url             = coalesce(local.ansible_test_url, local.ansible_prod_url)
+  ansible_test_tar_ball   = "v0.0.1.tar.gz"
+  ansible_prod_tar_ball   = "${var.ansible_playbook_version}.tar.gz"
+  ansible_tar_ball        = coalesce(local.ansible_test_tar_ball, local.ansible_prod_tar_ball)
+  git_repo_name           = "ansible-gcpartner-anthos-baremetal"
+  ansible_execute_timeout = 1800
 }
 
 resource "null_resource" "write_ssh_private_key" {
@@ -215,7 +214,7 @@ resource "null_resource" "execute_ansible" {
       "do",
       ". $HOME/bootstrap/ansible/bin/activate",
       "cd $HOME/bootstrap/${local.git_repo_name}",
-      "/usr/bin/timeout 1800 ansible-playbook -i inventory site.yaml -b",
+      "/usr/bin/timeout ${local.ansible_execute_timeout} ansible-playbook -i inventory site.yaml -b",
       "if [ $? -eq 0 ]; then",
       "break",
       "fi",

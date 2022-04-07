@@ -14,11 +14,14 @@ resource "google_project" "new_project" {
 }
 
 locals {
-  os_image_ubuntu = var.operating_system == "ubuntu_20_04" ? "ubuntu-os-cloud/ubuntu-2004-lts" : ""
-  os_image_rhel   = var.operating_system == "rhel_8" ? "rhel-cloud/rhel-8" : ""
-  os_image        = coalesce(local.os_image_ubuntu, local.os_image_rhel)
-  project_id      = var.create_project ? google_project.new_project.0.project_id : var.project_id
-  username        = "gpc"
+  os_image_ubuntu   = var.operating_system == "ubuntu_20_04" ? "ubuntu-os-cloud/ubuntu-2004-lts" : ""
+  os_image_rhel     = var.operating_system == "rhel_8" ? "rhel-cloud/rhel-8" : ""
+  os_image          = coalesce(local.os_image_ubuntu, local.os_image_rhel)
+  project_id        = var.create_project ? google_project.new_project.0.project_id : var.project_id
+  username          = "gpc"
+  root_disk_size    = 500
+  add_on_disk_count = 1
+  add_on_disk_size  = 1024
 }
 
 resource "google_project_service" "compute_engine" {
@@ -99,7 +102,7 @@ resource "google_compute_project_metadata" "ssh_pub_key" {
 }
 
 resource "google_compute_disk" "default" {
-  count = var.worker_node_count * 1 # should be a variable
+  count = var.worker_node_count * local.add_on_disk_count
   depends_on = [
     google_project_service.compute_engine
   ]
@@ -107,7 +110,7 @@ resource "google_compute_disk" "default" {
   name    = format("disk-%02d", count.index + 1)
   type    = "pd-ssd"
   zone    = var.gcp_zone
-  size    = 10 #should be a variable
+  size    = local.add_on_disk_size
 }
 
 resource "google_compute_instance" "cp_node" {
@@ -124,7 +127,7 @@ resource "google_compute_instance" "cp_node" {
   boot_disk {
     initialize_params {
       image = local.os_image
-      size  = 150 # This size is for IO performance, we really only need 150GB
+      size  = local.root_disk_size
       type  = "pd-ssd"
     }
   }
