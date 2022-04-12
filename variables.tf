@@ -66,6 +66,18 @@ variable "ansible_playbook_version" {
   default     = "v0.0.0"
 }
 
+variable "ansible_url" {
+  type        = string
+  description = "URL of the ansible code"
+  default     = ""
+}
+
+variable "ansible_tar_ball" {
+  type        = string
+  description = "Tarball of the ansible code"
+  default     = ""
+}
+
 
 # PhoenixNAP Vars
 variable "pnap_client_id" {

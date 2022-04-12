@@ -61,6 +61,17 @@ variable "ansible_playbook_version" {
   description = "The version of the ansible playbook to install"
 }
 
+
+variable "ansible_url" {
+  type        = string
+  description = "URL of the ansible code"
+}
+
+variable "ansible_tar_ball" {
+  type        = string
+  description = "Tarball of the ansible code"
+}
+
 variable "gcp_sa_keys" {
   type        = any
   description = "GCP Service Account Keys"

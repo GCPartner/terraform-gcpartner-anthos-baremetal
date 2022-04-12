@@ -1,10 +1,4 @@
 locals {
-  ansible_test_url        = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/heads/v0.0.1.tar.gz"
-  ansible_prod_url        = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/${var.ansible_playbook_version}.tar.gz"
-  ansible_url             = coalesce(local.ansible_test_url, local.ansible_prod_url)
-  ansible_test_tar_ball   = "v0.0.1.tar.gz"
-  ansible_prod_tar_ball   = "${var.ansible_playbook_version}.tar.gz"
-  ansible_tar_ball        = coalesce(local.ansible_test_tar_ball, local.ansible_prod_tar_ball)
   git_repo_name           = "ansible-gcpartner-anthos-baremetal"
   ansible_execute_timeout = 1800
 }
@@ -93,9 +87,9 @@ resource "null_resource" "download_ansible_playbook" {
     inline = [
       "mkdir -p $HOME/bootstrap",
       "cd  $HOME/bootstrap",
-      "curl -LO ${local.ansible_url}",
-      "tar -xf ${local.ansible_tar_ball}",
-      "rm -rf ${local.ansible_tar_ball}",
+      "curl -LO ${var.ansible_url}",
+      "tar -xf ${var.ansible_tar_ball}",
+      "rm -rf ${var.ansible_tar_ball}",
       "mv ${local.git_repo_name}* ${local.git_repo_name}"
     ]
   }
@@ -191,8 +185,6 @@ resource "null_resource" "write_worker_nodes_to_ansible_inventory" {
   }
 }
 
-# FIXME: run in while loop, 3 times
-# FIXME: if exit code is non zero, run it again, max 3 times
 resource "null_resource" "execute_ansible" {
   connection {
     type        = "ssh"
@@ -206,14 +198,15 @@ resource "null_resource" "execute_ansible" {
     null_resource.install_ansible
   ]
 
-
+  # INFO: run in while loop, 3 times
+  # INFO: if exit code is non zero, run it again, max 3 times
   provisioner "remote-exec" {
     inline = [
+      ". $HOME/bootstrap/ansible/bin/activate",
+      "cd $HOME/bootstrap/${local.git_repo_name}",
       "start=3",
       "while [ $start -gt 0 ]",
       "do",
-      ". $HOME/bootstrap/ansible/bin/activate",
-      "cd $HOME/bootstrap/${local.git_repo_name}",
       "/usr/bin/timeout ${local.ansible_execute_timeout} ansible-playbook -i inventory site.yaml -b",
       "if [ $? -eq 0 ]; then",
       "break",

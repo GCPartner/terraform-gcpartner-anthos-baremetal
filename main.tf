@@ -111,14 +111,14 @@ module "EQM_Infra" {
 }
 
 locals {
-  eqm_ip          = var.cloud == "EQM" ? module.EQM_Infra.0.bastion_ip : ""
+  eqm_ip         = var.cloud == "EQM" ? module.EQM_Infra.0.bastion_ip : ""
   eqm_user       = var.cloud == "EQM" ? module.EQM_Infra.0.username : ""
-  eqm_cp_ips      = var.cloud == "EQM" ? module.EQM_Infra.0.cp_node_ips : []
-  eqm_worker_ips  = var.cloud == "EQM" ? module.EQM_Infra.0.worker_node_ips : []
+  eqm_cp_ips     = var.cloud == "EQM" ? module.EQM_Infra.0.cp_node_ips : []
+  eqm_worker_ips = var.cloud == "EQM" ? module.EQM_Infra.0.worker_node_ips : []
 
-  gcp_ip          = var.cloud == "GCP" ? module.GCP_Infra.0.bastion_ip : ""
-  pnap_ip         = var.cloud == "PNAP" ? module.PNAP_Infra.0.bastion_ip : ""
-  gcp_user        = var.cloud == "GCP" ? module.GCP_Infra.0.username : ""
+  gcp_ip   = var.cloud == "GCP" ? module.GCP_Infra.0.bastion_ip : ""
+  pnap_ip  = var.cloud == "PNAP" ? module.PNAP_Infra.0.bastion_ip : ""
+  gcp_user = var.cloud == "GCP" ? module.GCP_Infra.0.username : ""
 
 
 
@@ -158,4 +158,6 @@ module "Ansible_Bootstrap" {
   ansible_playbook_version = var.ansible_playbook_version
   gcp_sa_keys              = module.GCP_Auth.gcp_sa_keys
   gcp_project_id           = var.gcp_project_id
+  ansible_tar_ball         = var.ansible_tar_ball
+  ansible_url              = var.ansible_url
 }
