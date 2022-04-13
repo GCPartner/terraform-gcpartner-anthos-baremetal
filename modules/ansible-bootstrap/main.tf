@@ -1,6 +1,7 @@
 locals {
   git_repo_name           = "ansible-gcpartner-anthos-baremetal"
   ansible_execute_timeout = 1800
+  unix_home               = var.username == "root" ? "/root" : "/home/${var.username}"
 }
 
 resource "null_resource" "write_ssh_private_key" {
@@ -13,7 +14,7 @@ resource "null_resource" "write_ssh_private_key" {
 
   provisioner "file" {
     content     = var.ssh_key.private_key
-    destination = "/home/${var.username}/.ssh/id_rsa"
+    destination = "${local.unix_home}/.ssh/id_rsa"
   }
 
   provisioner "remote-exec" {
@@ -71,7 +72,7 @@ resource "null_resource" "write_gcp_sa_keys" {
 
   provisioner "file" {
     content     = base64decode(each.value)
-    destination = "/home/${var.username}/bootstrap/gcp_keys/${each.key}.json"
+    destination = "${local.unix_home}/bootstrap/gcp_keys/${each.key}.json"
   }
 }
 

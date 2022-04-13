@@ -111,7 +111,7 @@ resource "null_resource" "cp_node_networking" {
 
   provisioner "file" {
     content     = element(data.template_file.cp_node_networking.*.rendered, count.index)
-    destination = "$HOME/bootstrap/node_networking.sh"
+    destination = "/${local.username}/bootstrap/node_networking.sh"
   }
 
   provisioner "remote-exec" {
@@ -147,7 +147,7 @@ resource "null_resource" "worker_node_networking" {
 
   provisioner "file" {
     content     = element(data.template_file.worker_node_networking.*.rendered, count.index)
-    destination = "$HOME/bootstrap/node_networking.sh"
+    destination = "/${local.username}/bootstrap/node_networking.sh"
   }
 
   provisioner "remote-exec" {
