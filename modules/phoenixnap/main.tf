@@ -86,7 +86,7 @@ resource "null_resource" "node_networking_cp" {
 
   provisioner "file" {
     content     = element(data.template_file.node_networking_cp.*.rendered, count.index)
-    destination = "$HOME/bootstrap/node_networking.py"
+    destination = "/home/${local.username}/bootstrap/node_networking.py"
   }
 
   provisioner "remote-exec" {
@@ -120,7 +120,7 @@ resource "null_resource" "node_networking_worker" {
 
   provisioner "file" {
     content     = element(data.template_file.node_networking_worker.*.rendered, count.index)
-    destination = "$HOME/bootstrap/node_networking.py"
+    destination = "/home/${local.username}/bootstrap/node_networking.py"
   }
 
   provisioner "remote-exec" {

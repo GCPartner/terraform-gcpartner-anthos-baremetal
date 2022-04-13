@@ -13,7 +13,7 @@ resource "null_resource" "write_ssh_private_key" {
 
   provisioner "file" {
     content     = var.ssh_key.private_key
-    destination = "$HOME/.ssh/id_rsa"
+    destination = "/home/${var.username}/.ssh/id_rsa"
   }
 
   provisioner "remote-exec" {
@@ -71,7 +71,7 @@ resource "null_resource" "write_gcp_sa_keys" {
 
   provisioner "file" {
     content     = base64decode(each.value)
-    destination = "$HOME/bootstrap/gcp_keys/${each.key}.json"
+    destination = "/home/${var.username}/bootstrap/gcp_keys/${each.key}.json"
   }
 }
 
