@@ -58,8 +58,6 @@ variable "worker_node_count" {
   description = "How many worker nodes to deploy"
 }
 
-# FIXME: what's the default in GCP_Infra context?
-
 variable "ansible_playbook_version" {
   type        = string
   description = "The version of the ansible playbook to install"
@@ -77,7 +75,6 @@ variable "ansible_tar_ball" {
   description = "Tarball of the ansible code"
   default     = ""
 }
-
 
 # PhoenixNAP Vars
 variable "pnap_client_id" {
