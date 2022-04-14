@@ -10,10 +10,10 @@ output "ssh_key_path" {
 
 output "bastion_host_ip" {
   value       = local.bastion_ip
-  description = "IP Address of the bastion host in the test enviorment"
+  description = "IP Address of the bastion host in the test environment"
 }
 
 output "bastion_host_username" {
   value       = local.username
-  description = "Username for the bastion host in the test enviorment"
+  description = "Username for the bastion host in the test environment"
 }
