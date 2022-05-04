@@ -64,7 +64,7 @@ data "template_file" "node_networking_cp" {
   count    = var.cp_node_count
   template = file("${path.module}/templates/node_networking.py")
   vars = {
-    ip_cidr = format("%s/%s", cidrhost(var.private_subnet, count.index + 1), split("/", var.private_subnet).1)
+    ip_cidr = format("%s/%s", cidrhost(var.private_subnet, count.index + 2), split("/", var.private_subnet).1)
     vlan_id = pnap_private_network.new_network.vlan_id
   }
 }
@@ -98,7 +98,7 @@ data "template_file" "node_networking_worker" {
   count    = var.worker_node_count
   template = file("${path.module}/templates/node_networking.py")
   vars = {
-    ip_cidr = format("%s/%s", cidrhost(var.private_subnet, count.index + 4), split("/", var.private_subnet).1)
+    ip_cidr = format("%s/%s", cidrhost(var.private_subnet, count.index + 5), split("/", var.private_subnet).1)
     vlan_id = pnap_private_network.new_network.vlan_id
   }
 }

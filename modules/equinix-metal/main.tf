@@ -88,7 +88,7 @@ data "template_file" "cp_node_networking" {
   template = file("${path.module}/templates/node_networking.sh")
   vars = {
     operating_system = var.operating_system
-    ip_address       = cidrhost(var.private_subnet, count.index + 1)
+    ip_address       = cidrhost(var.private_subnet, count.index + 2)
     netmask          = cidrnetmask(var.private_subnet)
   }
 }
@@ -124,7 +124,7 @@ data "template_file" "worker_node_networking" {
   template = file("${path.module}/templates/node_networking.sh")
   vars = {
     operating_system = var.operating_system
-    ip_address       = cidrhost(var.private_subnet, count.index + 4)
+    ip_address       = cidrhost(var.private_subnet, count.index + 5)
     netmask          = cidrnetmask(var.private_subnet)
   }
 }

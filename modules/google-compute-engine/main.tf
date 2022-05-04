@@ -173,7 +173,7 @@ data "template_file" "cp_node_networking" {
   template = file("${path.module}/templates/node_networking.py")
   vars = {
     local_ip             = element(google_compute_instance.cp_node.*.network_interface.0.network_ip, count.index)
-    gre_ip_cidr          = format("%s/%s", cidrhost(var.private_subnet, count.index + 1), split("/", var.private_subnet).1)
+    gre_ip_cidr          = format("%s/%s", cidrhost(var.private_subnet, count.index + 2), split("/", var.private_subnet).1)
     cp_local_ip_list     = jsonencode(google_compute_instance.cp_node.*.network_interface.0.network_ip)
     worker_local_ip_list = jsonencode(google_compute_instance.worker_node.*.network_interface.0.network_ip)
     gre_cidr             = var.private_subnet
@@ -185,7 +185,7 @@ data "template_file" "worker_node_networking" {
   template = file("${path.module}/templates/node_networking.py")
   vars = {
     local_ip             = element(google_compute_instance.worker_node.*.network_interface.0.network_ip, count.index)
-    gre_ip_cidr          = format("%s/%s", cidrhost(var.private_subnet, count.index + 4), split("/", var.private_subnet).1)
+    gre_ip_cidr          = format("%s/%s", cidrhost(var.private_subnet, count.index + 5), split("/", var.private_subnet).1)
     cp_local_ip_list     = jsonencode(google_compute_instance.cp_node.*.network_interface.0.network_ip)
     worker_local_ip_list = jsonencode(google_compute_instance.worker_node.*.network_interface.0.network_ip)
     gre_cidr             = var.private_subnet
