@@ -16,3 +16,8 @@ output "worker_node_ips" {
   value       = [for worker_ip in pnap_server.worker_node.*.public_ip_addresses : element(tolist(worker_ip), 0)]
   description = "First IP of worker nodes"
 }
+
+output "vlan_id" {
+  value       = pnap_private_network.new_network.vlan_id
+  description = "The vLan ID used for the private network"
+}

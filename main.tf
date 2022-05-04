@@ -111,26 +111,26 @@ module "EQM_Infra" {
 }
 
 locals {
-  eqm_ip         = var.cloud == "EQM" ? module.EQM_Infra.0.bastion_ip : ""
-  eqm_user       = var.cloud == "EQM" ? module.EQM_Infra.0.username : ""
-  eqm_cp_ips     = var.cloud == "EQM" ? module.EQM_Infra.0.cp_node_ips : []
-  eqm_worker_ips = var.cloud == "EQM" ? module.EQM_Infra.0.worker_node_ips : []
-
-  gcp_ip   = var.cloud == "GCP" ? module.GCP_Infra.0.bastion_ip : ""
-  pnap_ip  = var.cloud == "PNAP" ? module.PNAP_Infra.0.bastion_ip : ""
-  gcp_user = var.cloud == "GCP" ? module.GCP_Infra.0.username : ""
-
-
-
+  eqm_ip          = var.cloud == "EQM" ? module.EQM_Infra.0.bastion_ip : ""
+  eqm_user        = var.cloud == "EQM" ? module.EQM_Infra.0.username : ""
+  eqm_cp_ips      = var.cloud == "EQM" ? module.EQM_Infra.0.cp_node_ips : []
+  eqm_worker_ips  = var.cloud == "EQM" ? module.EQM_Infra.0.worker_node_ips : []
+  eqm_vlan_id     = var.cloud == "EQM" ? module.EQM_Infra.0.vlan_id : ""
+  gcp_ip          = var.cloud == "GCP" ? module.GCP_Infra.0.bastion_ip : ""
+  pnap_ip         = var.cloud == "PNAP" ? module.PNAP_Infra.0.bastion_ip : ""
+  gcp_user        = var.cloud == "GCP" ? module.GCP_Infra.0.username : ""
   gcp_cp_ips      = var.cloud == "GCP" ? module.GCP_Infra.0.cp_node_ips : []
+  gcp_vlan_id     = var.cloud == "GCP" ? module.GCP_Infra.0.vlan_id : ""
   pnap_cp_ips     = var.cloud == "PNAP" ? module.PNAP_Infra.0.cp_node_ips : []
   gcp_worker_ips  = var.cloud == "GCP" ? module.GCP_Infra.0.worker_node_ips : []
   pnap_worker_ips = var.cloud == "PNAP" ? module.PNAP_Infra.0.worker_node_ips : []
   pnap_user       = var.cloud == "PNAP" ? module.PNAP_Infra.0.username : ""
+  pnap_vlan_id    = var.cloud == "PNAP" ? module.PNAP_Infra.0.vlan_id : ""
   bastion_ip      = coalesce(local.eqm_ip, local.gcp_ip, local.pnap_ip)
   username        = coalesce(local.eqm_user, local.gcp_user, local.pnap_user)
   cp_ips          = coalescelist(local.eqm_cp_ips, local.gcp_cp_ips, local.pnap_cp_ips)
   worker_ips      = coalescelist(local.eqm_worker_ips, local.gcp_worker_ips, local.pnap_worker_ips)
+  vlan_id         = coalesce(local.eqm_vlan_id, local.gcp_vlan_id, local.pnap_vlan_id)
 }
 
 

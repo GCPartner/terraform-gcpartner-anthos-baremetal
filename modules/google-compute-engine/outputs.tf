@@ -19,3 +19,8 @@ output "cp_node_ips" {
   value       = google_compute_instance.cp_node.*.network_interface.0.network_ip
   description = "First IP of cp nodes"
 }
+
+output "vlan_id" {
+  value       = google_compute_network.gpc_network.id
+  description = "The vLan ID used for the private network"
+}

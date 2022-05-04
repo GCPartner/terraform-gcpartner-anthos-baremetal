@@ -17,3 +17,13 @@ output "bastion_host_username" {
   value       = local.username
   description = "Username for the bastion host in the test environment"
 }
+
+output "vlan_id" {
+  value       = local.vlan_id
+  description = "The vLan ID or Network ID for the private network"
+}
+
+output "private_subnet" {
+  value       = var.private_subnet
+  description = "The private IP space for the cluster"
+}
