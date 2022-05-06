@@ -19,16 +19,20 @@ resource "pnap_private_network" "new_network" {
   location = var.pnap_location
 }
 
-data "pnap_private_network" "private_network" {
+data "pnap_private_network" "existing_network" {
   count = var.pnap_create_network ? 0 : 1
   name  = var.pnap_network_name
 }
 
 locals {
-  private_network = var.pnap_create_network ? pnap_private_network.new_network[0] : data.pnap_private_network.private_network[0]
+  private_network = var.pnap_create_network ? pnap_private_network.new_network[0] : data.pnap_private_network.existing_network[0]
 }
 
 resource "pnap_server" "cp_node" {
+  depends_on = [
+    data.pnap_private_network.existing_network,
+    pnap_private_network.new_network
+  ]
   count    = var.cp_node_count
   hostname = format("%s-cp-%02d", var.cluster_name, count.index + 1)
   os       = local.os_image
@@ -50,6 +54,10 @@ resource "pnap_server" "cp_node" {
 }
 
 resource "pnap_server" "worker_node" {
+  depends_on = [
+    data.pnap_private_network.existing_network,
+    pnap_private_network.new_network
+  ]
   count    = var.worker_node_count
   hostname = format("%s-worker-%02d", var.cluster_name, count.index + 1)
   os       = local.os_image
@@ -71,6 +79,10 @@ resource "pnap_server" "worker_node" {
 }
 
 data "template_file" "node_networking_cp" {
+  depends_on = [
+    data.pnap_private_network.existing_network,
+    pnap_private_network.new_network
+  ]
   count    = var.cp_node_count
   template = file("${path.module}/templates/node_networking.py")
   vars = {
@@ -105,6 +117,10 @@ resource "null_resource" "node_networking_cp" {
 }
 
 data "template_file" "node_networking_worker" {
+  depends_on = [
+    data.pnap_private_network.existing_network,
+    pnap_private_network.new_network
+  ]
   count    = var.worker_node_count
   template = file("${path.module}/templates/node_networking.py")
   vars = {
