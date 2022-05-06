@@ -25,8 +25,7 @@ data "pnap_private_network" "private_network" {
 }
 
 locals {
-  network_id = var.pnap_create_network ? pnap_private_network.new_network[0].id : data.pnap_private_network.private_network[0].id
-  vlan_id = var.pnap_create_network ? pnap_private_network.new_network[0].vlan_id : data.pnap_private_network.private_network[0].vlan_id
+  private_network = var.pnap_create_network ? pnap_private_network.new_network[0] : data.pnap_private_network.private_network[0]
 }
 
 resource "pnap_server" "cp_node" {
@@ -43,7 +42,7 @@ resource "pnap_server" "cp_node" {
       configuration_type = "USER_DEFINED"
       private_networks {
         server_private_network {
-          id = local.network_id
+          id = local.private_network.id
         }
       }
     }
@@ -64,7 +63,7 @@ resource "pnap_server" "worker_node" {
       configuration_type = "USER_DEFINED"
       private_networks {
         server_private_network {
-          id = local.network_id
+          id = local.private_network.id
         }
       }
     }
@@ -76,7 +75,7 @@ data "template_file" "node_networking_cp" {
   template = file("${path.module}/templates/node_networking.py")
   vars = {
     ip_cidr = format("%s/%s", cidrhost(var.private_subnet, count.index + 2), split("/", var.private_subnet).1)
-    vlan_id = local.vlan_id
+    vlan_id = local.private_network.vlan_id
   }
 }
 
@@ -110,7 +109,7 @@ data "template_file" "node_networking_worker" {
   template = file("${path.module}/templates/node_networking.py")
   vars = {
     ip_cidr = format("%s/%s", cidrhost(var.private_subnet, count.index + 5), split("/", var.private_subnet).1)
-    vlan_id = local.vlan_id
+    vlan_id = local.private_network.vlan_id
   }
 }
 
