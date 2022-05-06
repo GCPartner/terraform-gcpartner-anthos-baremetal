@@ -77,14 +77,16 @@ module "PNAP_Infra" {
     private_key = chomp(tls_private_key.ssh_key_pair.private_key_pem)
     public_key  = chomp(tls_private_key.ssh_key_pair.public_key_openssh)
   }
-  cp_node_count     = local.cp_node_count
-  worker_node_count = var.worker_node_count
-  cluster_name      = local.cluster_name
-  operating_system  = var.operating_system
-  pnap_location     = var.pnap_location
-  pnap_cp_type      = var.pnap_cp_type
-  pnap_worker_type  = var.pnap_worker_type
-  private_subnet    = var.private_subnet
+  cp_node_count       = local.cp_node_count
+  worker_node_count   = var.worker_node_count
+  cluster_name        = local.cluster_name
+  operating_system    = var.operating_system
+  pnap_location       = var.pnap_location
+  pnap_cp_type        = var.pnap_cp_type
+  pnap_worker_type    = var.pnap_worker_type
+  pnap_create_network = var.pnap_create_network
+  pnap_network_name   = var.pnap_network_name
+  private_subnet      = var.private_subnet
 }
 
 module "EQM_Infra" {

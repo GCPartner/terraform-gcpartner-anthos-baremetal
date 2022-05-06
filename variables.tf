@@ -77,6 +77,18 @@ variable "ansible_tar_ball" {
 }
 
 # PhoenixNAP Vars
+variable "pnap_create_network" {
+  type        = bool
+  default     = false
+  description = "Create a new network if this is 'true'. Else use provided 'pnap_network_name'"
+}
+
+variable "pnap_network_name" {
+  type        = string
+  default     = ""
+  description = "The network_id to use when creating server in PNAP"
+}
+
 variable "pnap_client_id" {
   type        = string
   description = "PhoenixNAP API ID"

@@ -45,3 +45,13 @@ variable "private_subnet" {
   type        = string
   description = "The private IP space for the cluster"
 }
+
+variable "pnap_create_network" {
+  type        = bool
+  description = "Create a new network if this is 'true'. Else use provided 'pnap_network_name'"
+}
+
+variable "pnap_network_name" {
+  type        = string
+  description = "The network_id to use when creating server in PNAP"
+}
