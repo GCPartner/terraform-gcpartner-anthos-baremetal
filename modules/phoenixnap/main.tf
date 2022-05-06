@@ -64,7 +64,7 @@ resource "pnap_server" "worker_node" {
       configuration_type = "USER_DEFINED"
       private_networks {
         server_private_network {
-          id = local.n
+          id = local.network_id
         }
       }
     }
