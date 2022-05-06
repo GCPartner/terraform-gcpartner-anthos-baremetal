@@ -18,6 +18,6 @@ output "worker_node_ips" {
 }
 
 output "vlan_id" {
-  value       = local.vlan_id
+  value       = local.private_network.vlan_id
   description = "The vLan ID used for the private network"
 }
