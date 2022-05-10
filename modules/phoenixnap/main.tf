@@ -51,6 +51,9 @@ resource "pnap_server" "cp_node" {
       }
     }
   }
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "pnap_server" "worker_node" {
@@ -75,6 +78,9 @@ resource "pnap_server" "worker_node" {
         }
       }
     }
+  }
+  lifecycle {
+    ignore_changes = all
   }
 }
 
