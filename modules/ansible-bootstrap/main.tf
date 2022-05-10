@@ -196,7 +196,8 @@ resource "null_resource" "execute_ansible" {
   depends_on = [
     null_resource.download_ansible_playbook,
     null_resource.write_worker_nodes_to_ansible_inventory,
-    null_resource.install_ansible
+    null_resource.install_ansible,
+    null_resource.write_gcp_sa_keys
   ]
 
   # INFO: run in while loop, 3 times

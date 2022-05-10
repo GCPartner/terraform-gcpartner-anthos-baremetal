@@ -138,6 +138,7 @@ locals {
 
 module "Ansible_Bootstrap" {
   depends_on = [
+    module.GCP_Auth,
     module.EQM_Infra,
     module.GCP_Infra,
     module.PNAP_Infra
