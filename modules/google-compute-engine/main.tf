@@ -18,7 +18,7 @@ locals {
   os_image_rhel     = var.operating_system == "rhel_8" ? "rhel-cloud/rhel-8" : ""
   os_image          = coalesce(local.os_image_ubuntu, local.os_image_rhel)
   project_id        = var.create_project ? google_project.new_project.0.project_id : var.project_id
-  username          = "gpc"
+  username          = "gcp"
   root_disk_size    = 500
   add_on_disk_count = 1
   add_on_disk_size  = 1024
@@ -30,20 +30,20 @@ resource "google_project_service" "compute_engine" {
   disable_on_destroy = false
 }
 
-resource "google_compute_network" "gpc_network" {
+resource "google_compute_network" "gcp_network" {
   depends_on = [
     google_project_service.compute_engine
   ]
   project                 = local.project_id
-  name                    = "gpc-network"
+  name                    = "gcp-network"
   auto_create_subnetworks = true
   mtu                     = 1500
 }
 
 resource "google_compute_firewall" "allow-all-internal" {
-  name      = format("%s-%s", google_compute_network.gpc_network.name, "allow-all-internal")
+  name      = format("%s-%s", google_compute_network.gcp_network.name, "allow-all-internal")
   project   = local.project_id
-  network   = google_compute_network.gpc_network.id
+  network   = google_compute_network.gcp_network.id
   priority  = 65534
   direction = "INGRESS"
   allow {
@@ -54,9 +54,9 @@ resource "google_compute_firewall" "allow-all-internal" {
 }
 
 resource "google_compute_firewall" "allow-icmp" {
-  name      = format("%s-%s", google_compute_network.gpc_network.name, "allow-icmp")
+  name      = format("%s-%s", google_compute_network.gcp_network.name, "allow-icmp")
   project   = local.project_id
-  network   = google_compute_network.gpc_network.id
+  network   = google_compute_network.gcp_network.id
   priority  = 65534
   direction = "INGRESS"
   allow {
@@ -67,9 +67,9 @@ resource "google_compute_firewall" "allow-icmp" {
 }
 
 resource "google_compute_firewall" "allow-ssh" {
-  name      = format("%s-%s", google_compute_network.gpc_network.name, "allow-ssh")
+  name      = format("%s-%s", google_compute_network.gcp_network.name, "allow-ssh")
   project   = local.project_id
-  network   = google_compute_network.gpc_network.id
+  network   = google_compute_network.gcp_network.id
   priority  = 65534
   direction = "INGRESS"
   allow {
@@ -132,7 +132,7 @@ resource "google_compute_instance" "cp_node" {
     }
   }
   network_interface {
-    network = google_compute_network.gpc_network.id
+    network = google_compute_network.gcp_network.id
     access_config {
       nat_ip = count.index == 0 ? google_compute_address.bastion_ip.address : null
     }
@@ -158,7 +158,7 @@ resource "google_compute_instance" "worker_node" {
     }
   }
   network_interface {
-    network = google_compute_network.gpc_network.id
+    network = google_compute_network.gcp_network.id
   }
 }
 
@@ -243,7 +243,7 @@ resource "null_resource" "worker_node_networking" {
 resource "google_compute_router" "cloud-router" {
   name    = format("%s-router", var.cluster_name)
   region  = trim(var.gcp_zone, "-a")
-  network = google_compute_network.gpc_network.id
+  network = google_compute_network.gcp_network.id
   project = local.project_id
   bgp {
     asn = 64514

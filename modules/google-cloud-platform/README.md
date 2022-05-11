@@ -1,21 +1,4 @@
 <!-- BEGIN_TF_DOCS -->
-
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | n/a |
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [google_project_iam_member.role_assignment](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
-| [google_project_service.enabled-apis](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_service) | resource |
-| [google_service_account.service_accounts](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
-| [google_service_account_key.sa_keys](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_key) | resource |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

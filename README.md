@@ -1,46 +1,90 @@
-[![Anthos on Baremetal Website](https://img.shields.io/badge/Website%3A-cloud.google.com/anthos-blue)](https://cloud.google.com/anthos) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/GCPartner/terraform-gcpartner-anthos-baremetal/pulls) ![](https://img.shields.io/badge/Stability-Experimental-red.svg)
-# Automated Anthos on Baremetal via Terraform
-This [Terraform](http://terraform.io) module will allow you to deploy [Google Cloud's Anthos on Baremetal](https://cloud.google.com/anthos) on multiple different infrastucture providers.
+[![Anthos on Baremetal Website](https://img.shields.io/badge/Website-cloud.google.com/anthos-blue)](https://cloud.google.com/anthos) [![Apache License](https://img.shields.io/github/license/GCPartner/phoenixnap-megaport-anthos)](https://github.com/GCPartner/terraform-gcpartner-anthos-baremetal/blob/main/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/GCPartner/terraform-gcpartner-anthos-baremetal/pulls) ![](https://img.shields.io/badge/Stability-Experimental-red.svg)
+# Anthos on PhoenixNAP, GKE on Google Cloud, Interconnected with MegaPort
+This [Terraform](http://terraform.io) module will allow you to deploy [Google Cloud's Anthos on Baremetal](https://cloud.google.com/anthos) on Multiple different Clouds (Google Cloud, PhoenixNAP, & Equinix Metal)
 
-## Pre-requisites
-GCloud installed locally
+## Prerequisites 
+### Software to Install
+`Only Linux has been tested`
+* [gcloud command line](https://cloud.google.com/sdk/docs/install)
+* [terraform](https://www.terraform.io/downloads)
+* [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
-Terraform (>1.1) installed locally
+### Accounts Needed
+* [Google Cloud Account](https://console.cloud.google.com/)
+* If Cloud == PNAP
+  * [PhoenixNAP](https://phoenixnap.com/bare-metal-cloud)
+* If Cloud == EQM
+  * [PhoenixNAP](https://metal.equinix.com)
+### Information to Gather
+* Deploy on GCP
+   * Your GCP Project ID
+* Deploy on PhoenixNAP
+  * Client ID
+  * Client Secret
+* Deploy on Equinix Metal
+  * API Auth Token
+  * Your Equinix Metal Project ID
+## Deployment
+### Authenticate to Google Cloud
+```bash
+gcloud init # Follow any prompts
+gcloud auth application-default login # Follown any prompts
+```
+### Clone the Repo
+```bash
+git clone https://github.com/GCPartner/terraform-gcpartner-anthos-baremetal.git
+cd terraform-gcpartner-anthos-baremetal
+```
+### Create your *terraform.tfvars*
+The following values will need to be modified by you.
+#### GCP Minimal Deployment
+```bash
+cat <<EOF >terraform.tfvars 
+gcp_project_id = "my_project"
+EOF
+```
 
-## Quotas
-### For GCP
-SSD: 6TB of Disk
+#### PhoenixNAP Minimal Deployment
+```bash
+cat <<EOF >terraform.tfvars 
+gcp_project_id = "my_project"
+cloud = "PNAP"
+pnap_client_id = "******"
+pnap_client_secret = "******"
+pnap_network_name = "my-network"
+EOF
+```
+#### Equinix Metal Minimal Deployment
+```bash
+cat <<EOF >terraform.tfvars 
+gcp_project_id = "my_project"
+cloud = "EQM"
+metal_auth_token = "a0ec413e-0786-4c17-a302-20ccd8a40c2e"
+metal_project_id = "cf27282f-df35-4839-9f15-77e201aa2a2c"
+EOF
+```
+### Initialize Terraform
+```bash
+terraform init
+```
+### Deploy the stack
+```bash
+terraform apply --auto-approve
+```
+### What success looks like
+```
+Apply complete! Resources: 79 added, 0 changed, 0 destroyed.
 
-vCPUs: 48vCPUs
+Outputs:
+
+bastion_host_ip = "34.134.208.244"
+bastion_host_username = "gcp"
+private_subnet = "172.31.254.0/24"
+ssh_command = "ssh -i /home/c0dyhi11/.ssh/anthos-cody-qp5we gcp@34.134.208.244"
+ssh_key_path = "/home/c0dyhi11/.ssh/anthos-cody-qp5we"
+vlan_id = "Not applicable for Google cloud"
+```
 <!-- BEGIN_TF_DOCS -->
-
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_random"></a> [random](#provider\_random) | 3.1.3 |
-| <a name="provider_tls"></a> [tls](#provider\_tls) | 3.3.0 |
-| <a name="provider_local"></a> [local](#provider\_local) | 2.2.2 |
-
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_GCP_Auth"></a> [GCP\_Auth](#module\_GCP\_Auth) | ./modules/google-cloud-platform | n/a |
-| <a name="module_GCP_Infra"></a> [GCP\_Infra](#module\_GCP\_Infra) | ./modules/google-compute-engine | n/a |
-| <a name="module_PNAP_Infra"></a> [PNAP\_Infra](#module\_PNAP\_Infra) | ./modules/phoenixnap | n/a |
-| <a name="module_EQM_Infra"></a> [EQM\_Infra](#module\_EQM\_Infra) | ./modules/equinix-metal | n/a |
-| <a name="module_Ansible_Bootstrap"></a> [Ansible\_Bootstrap](#module\_Ansible\_Bootstrap) | ./modules/ansible-bootstrap | n/a |
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [local_file.cluster_private_key_pem](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
-| [random_string.cluster_suffix](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
-| [tls_private_key.ssh_key_pair](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -55,11 +99,11 @@ vCPUs: 48vCPUs
 | <a name="input_private_subnet"></a> [private\_subnet](#input\_private\_subnet) | The private IP space for the cluster | `string` | `"172.31.254.0/24"` | no |
 | <a name="input_ha_control_plane"></a> [ha\_control\_plane](#input\_ha\_control\_plane) | Do you want a highly available control plane | `bool` | `true` | no |
 | <a name="input_worker_node_count"></a> [worker\_node\_count](#input\_worker\_node\_count) | How many worker nodes to deploy | `number` | `3` | no |
-| <a name="input_ansible_playbook_version"></a> [ansible\_playbook\_version](#input\_ansible\_playbook\_version) | The version of the ansible playbook to install | `string` | `"v0.0.0"` | no |
-| <a name="input_ansible_url"></a> [ansible\_url](#input\_ansible\_url) | URL of the ansible code | `string` | `""` | no |
-| <a name="input_ansible_tar_ball"></a> [ansible\_tar\_ball](#input\_ansible\_tar\_ball) | Tarball of the ansible code | `string` | `""` | no |
+| <a name="input_ansible_playbook_version"></a> [ansible\_playbook\_version](#input\_ansible\_playbook\_version) | The version of the ansible playbook to install | `string` | `"v1.0.0"` | no |
+| <a name="input_ansible_url"></a> [ansible\_url](#input\_ansible\_url) | URL of the ansible code | `string` | `"https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/v1.0.0.tar.gz"` | no |
+| <a name="input_ansible_tar_ball"></a> [ansible\_tar\_ball](#input\_ansible\_tar\_ball) | Tarball of the ansible code | `string` | `"v1.0.0.tar.gz"` | no |
 | <a name="input_pnap_create_network"></a> [pnap\_create\_network](#input\_pnap\_create\_network) | Create a new network if this is 'true'. Else use provided 'pnap\_network\_name' | `bool` | `false` | no |
-| <a name="input_pnap_network_name"></a> [pnap\_network\_name](#input\_pnap\_network\_name) | The network\_id to use when creating server in PNAP | `string` | `""` | no |
+| <a name="input_pnap_network_name"></a> [pnap\_network\_name](#input\_pnap\_network\_name) | The name of the network to use when creating servers in PNAP | `string` | `""` | no |
 | <a name="input_pnap_client_id"></a> [pnap\_client\_id](#input\_pnap\_client\_id) | PhoenixNAP API ID | `string` | `"null"` | no |
 | <a name="input_pnap_client_secret"></a> [pnap\_client\_secret](#input\_pnap\_client\_secret) | PhoenixNAP API Secret | `string` | `"null"` | no |
 | <a name="input_pnap_location"></a> [pnap\_location](#input\_pnap\_location) | PhoenixNAP Location to deploy into | `string` | `"ASH"` | no |

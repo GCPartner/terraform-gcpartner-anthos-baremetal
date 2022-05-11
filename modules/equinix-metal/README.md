@@ -1,32 +1,4 @@
 <!-- BEGIN_TF_DOCS -->
-
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_metal"></a> [metal](#provider\_metal) | n/a |
-| <a name="provider_null"></a> [null](#provider\_null) | n/a |
-| <a name="provider_template"></a> [template](#provider\_template) | n/a |
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [metal_device.cp_node](https://registry.terraform.io/providers/equinix/metal/latest/docs/resources/device) | resource |
-| [metal_device.worker_node](https://registry.terraform.io/providers/equinix/metal/latest/docs/resources/device) | resource |
-| [metal_device_network_type.convert_network_cp_node](https://registry.terraform.io/providers/equinix/metal/latest/docs/resources/device_network_type) | resource |
-| [metal_device_network_type.convert_network_worker_node](https://registry.terraform.io/providers/equinix/metal/latest/docs/resources/device_network_type) | resource |
-| [metal_port_vlan_attachment.private_vlan_attach_cp_node](https://registry.terraform.io/providers/equinix/metal/latest/docs/resources/port_vlan_attachment) | resource |
-| [metal_port_vlan_attachment.private_vlan_attach_worker_node](https://registry.terraform.io/providers/equinix/metal/latest/docs/resources/port_vlan_attachment) | resource |
-| [metal_project.new_project](https://registry.terraform.io/providers/equinix/metal/latest/docs/resources/project) | resource |
-| [metal_ssh_key.ssh_pub_key](https://registry.terraform.io/providers/equinix/metal/latest/docs/resources/ssh_key) | resource |
-| [metal_vlan.private_vlan](https://registry.terraform.io/providers/equinix/metal/latest/docs/resources/vlan) | resource |
-| [null_resource.cp_node_networking](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.worker_node_networking](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [template_file.cp_node_networking](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
-| [template_file.worker_node_networking](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

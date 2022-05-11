@@ -1,39 +1,4 @@
 <!-- BEGIN_TF_DOCS -->
-
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_random"></a> [random](#provider\_random) | n/a |
-| <a name="provider_google"></a> [google](#provider\_google) | n/a |
-| <a name="provider_template"></a> [template](#provider\_template) | n/a |
-| <a name="provider_null"></a> [null](#provider\_null) | n/a |
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [google_compute_address.bastion_ip](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_address) | resource |
-| [google_compute_attached_disk.default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_attached_disk) | resource |
-| [google_compute_disk.default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_disk) | resource |
-| [google_compute_firewall.allow-all-internal](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
-| [google_compute_firewall.allow-icmp](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
-| [google_compute_firewall.allow-ssh](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
-| [google_compute_instance.cp_node](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance) | resource |
-| [google_compute_instance.worker_node](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance) | resource |
-| [google_compute_network.gpc_network](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_network) | resource |
-| [google_compute_project_metadata.ssh_pub_key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_project_metadata) | resource |
-| [google_compute_router.cloud-router](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_router) | resource |
-| [google_compute_router_nat.nat-gateway](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_router_nat) | resource |
-| [google_project.new_project](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project) | resource |
-| [google_project_service.compute_engine](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_service) | resource |
-| [null_resource.cp_node_networking](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.worker_node_networking](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [random_string.project_suffix](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
-| [template_file.cp_node_networking](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
-| [template_file.worker_node_networking](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -62,5 +27,5 @@
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 | <a name="output_worker_node_ips"></a> [worker\_node\_ips](#output\_worker\_node\_ips) | First IP of worker nodes |
 | <a name="output_cp_node_ips"></a> [cp\_node\_ips](#output\_cp\_node\_ips) | First IP of cp nodes |
-| <a name="output_vlan_id"></a> [vlan\_id](#output\_vlan\_id) | The vLan ID used for the private network |
+| <a name="output_vlan_id"></a> [vlan\_id](#output\_vlan\_id) | Not applicable for Google cloud |
 <!-- END_TF_DOCS -->

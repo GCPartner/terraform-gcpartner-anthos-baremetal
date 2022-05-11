@@ -21,6 +21,6 @@ output "cp_node_ips" {
 }
 
 output "vlan_id" {
-  value       = google_compute_network.gpc_network.id
-  description = "The vLan ID used for the private network"
+  value       = "Not applicable for Google cloud"
+  description = "Not applicable for Google cloud"
 }

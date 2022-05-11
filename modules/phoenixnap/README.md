@@ -1,27 +1,4 @@
 <!-- BEGIN_TF_DOCS -->
-
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_pnap"></a> [pnap](#provider\_pnap) | n/a |
-| <a name="provider_template"></a> [template](#provider\_template) | n/a |
-| <a name="provider_null"></a> [null](#provider\_null) | n/a |
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [null_resource.node_networking_cp](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.node_networking_worker](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [pnap_private_network.new_network](https://registry.terraform.io/providers/phoenixnap/pnap/latest/docs/resources/private_network) | resource |
-| [pnap_server.cp_node](https://registry.terraform.io/providers/phoenixnap/pnap/latest/docs/resources/server) | resource |
-| [pnap_server.worker_node](https://registry.terraform.io/providers/phoenixnap/pnap/latest/docs/resources/server) | resource |
-| [pnap_private_network.existing_network](https://registry.terraform.io/providers/phoenixnap/pnap/latest/docs/data-sources/private_network) | data source |
-| [template_file.node_networking_cp](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
-| [template_file.node_networking_worker](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

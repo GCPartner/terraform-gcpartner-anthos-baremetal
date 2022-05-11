@@ -61,19 +61,19 @@ variable "worker_node_count" {
 variable "ansible_playbook_version" {
   type        = string
   description = "The version of the ansible playbook to install"
-  default     = "v0.0.0"
+  default     = "v1.0.0"
 }
 
 variable "ansible_url" {
   type        = string
   description = "URL of the ansible code"
-  default     = ""
+  default     = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/v1.0.0.tar.gz"
 }
 
 variable "ansible_tar_ball" {
   type        = string
   description = "Tarball of the ansible code"
-  default     = ""
+  default     = "v1.0.0.tar.gz"
 }
 
 # PhoenixNAP Vars
@@ -86,7 +86,7 @@ variable "pnap_create_network" {
 variable "pnap_network_name" {
   type        = string
   default     = ""
-  description = "The network_id to use when creating server in PNAP"
+  description = "The name of the network to use when creating servers in PNAP"
 }
 
 variable "pnap_client_id" {

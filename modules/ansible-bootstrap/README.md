@@ -1,26 +1,4 @@
 <!-- BEGIN_TF_DOCS -->
-
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_null"></a> [null](#provider\_null) | n/a |
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [null_resource.download_ansible_playbook](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.execute_ansible](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.install_ansible](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.write_ansible_inventory_header](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.write_cp_nodes_to_ansible_inventory](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.write_gcp_sa_keys](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.write_ssh_private_key](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.write_worker_header_to_ansible_inventory](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.write_worker_nodes_to_ansible_inventory](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
