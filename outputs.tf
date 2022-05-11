@@ -20,7 +20,7 @@ output "bastion_host_username" {
 
 output "vlan_id" {
   value       = local.vlan_id
-  description = "The vLan ID or Network ID for the private network"
+  description = "The vLan ID for the private network"
 }
 
 output "private_subnet" {

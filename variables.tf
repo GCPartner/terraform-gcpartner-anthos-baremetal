@@ -85,7 +85,7 @@ variable "pnap_create_network" {
 
 variable "pnap_network_name" {
   type        = string
-  default     = ""
+  default     = "null"
   description = "The name of the network to use when creating servers in PNAP"
 }
 
