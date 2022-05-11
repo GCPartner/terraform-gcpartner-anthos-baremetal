@@ -14,7 +14,7 @@ This [Terraform](http://terraform.io) module will allow you to deploy [Google Cl
 * If Cloud == PNAP
   * [PhoenixNAP](https://phoenixnap.com/bare-metal-cloud)
 * If Cloud == EQM
-  * [PhoenixNAP](https://metal.equinix.com)
+  * [Equinix Metal](https://metal.equinix.com)
 ### Information to Gather
 * Deploy on GCP
    * Your GCP Project ID
