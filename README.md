@@ -1,10 +1,14 @@
 [![Anthos on Baremetal Website](https://img.shields.io/badge/Website-cloud.google.com/anthos-blue)](https://cloud.google.com/anthos) [![Apache License](https://img.shields.io/github/license/GCPartner/phoenixnap-megaport-anthos)](https://github.com/GCPartner/terraform-gcpartner-anthos-baremetal/blob/main/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/GCPartner/terraform-gcpartner-anthos-baremetal/pulls) ![](https://img.shields.io/badge/Stability-Experimental-red.svg)
-# Anthos on PhoenixNAP, GKE on Google Cloud, Interconnected with MegaPort
+# Google Anthos on Baremetal
 This [Terraform](http://terraform.io) module will allow you to deploy [Google Cloud's Anthos on Baremetal](https://cloud.google.com/anthos) on Multiple different Clouds (Google Cloud, PhoenixNAP, & Equinix Metal)
+
+The software in this repository has been tested sucessfully on the following hosts:   
+1. Ubuntu 20.04 (amd64)
+1. macOS 12.4 (macOS Catalina with an Intel processor) 
 
 ## Prerequisites 
 ### Software to Install
-`Only Linux has been tested`
+
 * [gcloud command line](https://cloud.google.com/sdk/docs/install)
 * [terraform](https://www.terraform.io/downloads)
 * [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
