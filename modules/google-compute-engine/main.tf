@@ -35,7 +35,7 @@ resource "google_compute_network" "gcp_network" {
     google_project_service.compute_engine
   ]
   project                 = local.project_id
-  name                    = "gcp-network"
+  name                    = "${var.cluster_name}-vpc"
   auto_create_subnetworks = true
   mtu                     = 1500
 }
@@ -84,7 +84,7 @@ resource "google_compute_address" "bastion_ip" {
   depends_on = [
     google_project_service.compute_engine
   ]
-  name    = "bastion-ip"
+  name    = "${var.cluster_name}-ip"
   project = local.project_id
   region  = trim(var.gcp_zone, "-a")
 }
@@ -107,7 +107,7 @@ resource "google_compute_disk" "default" {
     google_project_service.compute_engine
   ]
   project = local.project_id
-  name    = format("disk-%02d", count.index + 1)
+  name    = format("${var.cluster_name}-%02d", count.index + 1)
   type    = "pd-ssd"
   zone    = var.gcp_zone
   size    = local.add_on_disk_size
