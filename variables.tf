@@ -80,19 +80,19 @@ variable "private_network_id" {
 variable "ansible_playbook_version" {
   type        = string
   description = "The version of the ansible playbook to install"
-  default     = "v1.0.1"
+  default     = "v1.0.2"
 }
 
 variable "ansible_url" {
   type        = string
   description = "URL of the ansible code"
-  default     = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/v1.0.1.tar.gz"
+  default     = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/v1.0.2.tar.gz"
 }
 
 variable "ansible_tar_ball" {
   type        = string
   description = "Tarball of the ansible code"
-  default     = "v1.0.1.tar.gz"
+  default     = "v1.0.2.tar.gz"
 }
 
 # PhoenixNAP Vars
