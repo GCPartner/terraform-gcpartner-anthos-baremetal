@@ -12,8 +12,10 @@
 | <a name="input_pnap_worker_type"></a> [pnap\_worker\_type](#input\_pnap\_worker\_type) | PhoenixNAP server type to deploy for worker nodes | `string` | n/a | yes |
 | <a name="input_ssh_key"></a> [ssh\_key](#input\_ssh\_key) | SSH Public and Private Key | <pre>object({<br>    public_key  = string<br>    private_key = string<br>  })</pre> | n/a | yes |
 | <a name="input_private_subnet"></a> [private\_subnet](#input\_private\_subnet) | The private IP space for the cluster | `string` | n/a | yes |
-| <a name="input_pnap_create_network"></a> [pnap\_create\_network](#input\_pnap\_create\_network) | Create a new network if this is 'true'. Else use provided 'pnap\_network\_name' | `bool` | n/a | yes |
-| <a name="input_pnap_network_name"></a> [pnap\_network\_name](#input\_pnap\_network\_name) | The network\_id to use when creating server in PNAP | `string` | n/a | yes |
+| <a name="input_create_network"></a> [create\_network](#input\_create\_network) | Create a new network if this is 'true'. Else use provided 'p*\_network\_id' | `bool` | n/a | yes |
+| <a name="input_public_network_id"></a> [public\_network\_id](#input\_public\_network\_id) | If create\_network=false, this will be the public network used for the deployment. (Only supported in PNAP today) | `string` | n/a | yes |
+| <a name="input_private_network_id"></a> [private\_network\_id](#input\_private\_network\_id) | If create\_network=false, this will be the private network used for the deployment. (Only supported in PNAP today) | `string` | n/a | yes |
+| <a name="input_network_type"></a> [network\_type](#input\_network\_type) | Deploy the nodes on a 'private' or 'public' network. (Only supported in PNAP today) | `string` | n/a | yes |
 
 ## Outputs
 
@@ -24,4 +26,5 @@
 | <a name="output_cp_node_ips"></a> [cp\_node\_ips](#output\_cp\_node\_ips) | First IP of control plane nodes |
 | <a name="output_worker_node_ips"></a> [worker\_node\_ips](#output\_worker\_node\_ips) | First IP of worker nodes |
 | <a name="output_vlan_id"></a> [vlan\_id](#output\_vlan\_id) | The vLan ID used for the private network |
+| <a name="output_subnet"></a> [subnet](#output\_subnet) | Public Network CIDR |
 <!-- END_TF_DOCS -->
