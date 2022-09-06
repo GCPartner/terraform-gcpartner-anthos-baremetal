@@ -41,11 +41,6 @@ variable "cluster_name" {
   description = "The ABM cluster name"
 }
 
-variable "abm_version" {
-  type        = string
-  description = "The version of Anthos Private Mode to install"
-}
-
 variable "operating_system" {
   type        = string
   description = "The Operating system to deploy (Only ubuntu_20_04 has been tested)"

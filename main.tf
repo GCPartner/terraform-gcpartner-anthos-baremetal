@@ -161,7 +161,6 @@ module "Ansible_Bootstrap" {
   worker_ips               = local.worker_ips
   private_subnet           = local.subnet
   cluster_name             = local.cluster_name
-  abm_version              = var.abm_version
   operating_system         = var.operating_system
   username                 = local.username
   ansible_playbook_version = var.ansible_playbook_version

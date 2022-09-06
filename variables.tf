@@ -34,12 +34,6 @@ variable "project_name" {
   description = "The name of the project if 'create_project' is 'true'."
 }
 
-variable "abm_version" {
-  type        = string
-  default     = "1.10.1"
-  description = "The version of Anthos on Baremetal to install"
-}
-
 variable "private_subnet" {
   type        = string
   default     = "172.31.254.0/24"
