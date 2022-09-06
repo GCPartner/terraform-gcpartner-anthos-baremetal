@@ -24,3 +24,8 @@ output "vlan_id" {
   value       = "Not applicable for Google cloud"
   description = "Not applicable for Google cloud"
 }
+
+output "subnet" {
+  value       = var.private_subnet
+  description = "The private IP space for the cluster"
+}

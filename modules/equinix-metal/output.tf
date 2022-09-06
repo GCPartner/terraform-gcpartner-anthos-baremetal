@@ -21,3 +21,8 @@ output "vlan_id" {
   value       = metal_vlan.private_vlan.vxlan
   description = "The vLan ID used for the private network"
 }
+
+output "subnet" {
+  value       = var.private_subnet
+  description = "The private IP space for the cluster"
+}

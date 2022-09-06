@@ -58,37 +58,50 @@ variable "worker_node_count" {
   description = "How many worker nodes to deploy"
 }
 
+variable "network_type" {
+  type        = string
+  default     = "public"
+  description = "Deploy the nodes on a 'private' or 'public' network. (Only supported in PNAP today)"
+}
+
+variable "create_network" {
+  type        = bool
+  default     = true
+  description = "Create a new network if this is 'true'. Else use provided 'p*_network_id'"
+}
+
+variable "public_network_id" {
+  type        = string
+  default     = "null"
+  description = "If create_network=false, this will be the public network used for the deployment. (Only supported in PNAP today)"
+}
+
+variable "private_network_id" {
+  type        = string
+  default     = "null"
+  description = "If create_network=false, this will be the private network used for the deployment. (Only supported in PNAP today)"
+}
+
+# Ansible Vars
 variable "ansible_playbook_version" {
   type        = string
   description = "The version of the ansible playbook to install"
-  default     = "v1.0.0"
+  default     = "v1.0.1"
 }
 
 variable "ansible_url" {
   type        = string
   description = "URL of the ansible code"
-  default     = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/v1.0.0.tar.gz"
+  default     = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/v1.0.1.tar.gz"
 }
 
 variable "ansible_tar_ball" {
   type        = string
   description = "Tarball of the ansible code"
-  default     = "v1.0.0.tar.gz"
+  default     = "v1.0.1.tar.gz"
 }
 
 # PhoenixNAP Vars
-variable "pnap_create_network" {
-  type        = bool
-  default     = false
-  description = "Create a new network if this is 'true'. Else use provided 'pnap_network_name'"
-}
-
-variable "pnap_network_name" {
-  type        = string
-  default     = "null"
-  description = "The name of the network to use when creating servers in PNAP"
-}
-
 variable "pnap_client_id" {
   type        = string
   description = "PhoenixNAP API ID"

@@ -46,12 +46,22 @@ variable "private_subnet" {
   description = "The private IP space for the cluster"
 }
 
-variable "pnap_create_network" {
+variable "create_network" {
   type        = bool
-  description = "Create a new network if this is 'true'. Else use provided 'pnap_network_name'"
+  description = "Create a new network if this is 'true'. Else use provided 'p*_network_id'"
 }
 
-variable "pnap_network_name" {
+variable "public_network_id" {
   type        = string
-  description = "The network_id to use when creating server in PNAP"
+  description = "If create_network=false, this will be the public network used for the deployment. (Only supported in PNAP today)"
+}
+
+variable "private_network_id" {
+  type        = string
+  description = "If create_network=false, this will be the private network used for the deployment. (Only supported in PNAP today)"
+}
+
+variable "network_type" {
+  type        = string
+  description = "Deploy the nodes on a 'private' or 'public' network. (Only supported in PNAP today)"
 }

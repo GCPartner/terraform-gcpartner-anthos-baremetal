@@ -77,16 +77,18 @@ module "PNAP_Infra" {
     private_key = chomp(tls_private_key.ssh_key_pair.private_key_pem)
     public_key  = chomp(tls_private_key.ssh_key_pair.public_key_openssh)
   }
-  cp_node_count       = local.cp_node_count
-  worker_node_count   = var.worker_node_count
-  cluster_name        = local.cluster_name
-  operating_system    = var.operating_system
-  pnap_location       = var.pnap_location
-  pnap_cp_type        = var.pnap_cp_type
-  pnap_worker_type    = var.pnap_worker_type
-  pnap_create_network = var.pnap_create_network
-  pnap_network_name   = var.pnap_network_name
-  private_subnet      = var.private_subnet
+  cp_node_count      = local.cp_node_count
+  worker_node_count  = var.worker_node_count
+  cluster_name       = local.cluster_name
+  operating_system   = var.operating_system
+  pnap_location      = var.pnap_location
+  pnap_cp_type       = var.pnap_cp_type
+  pnap_worker_type   = var.pnap_worker_type
+  public_network_id  = var.public_network_id
+  private_network_id = var.private_network_id
+  private_subnet     = var.private_subnet
+  create_network     = var.create_network
+  network_type       = var.network_type
 }
 
 module "EQM_Infra" {
@@ -128,11 +130,15 @@ locals {
   pnap_worker_ips = var.cloud == "PNAP" ? module.PNAP_Infra.0.worker_node_ips : []
   pnap_user       = var.cloud == "PNAP" ? module.PNAP_Infra.0.username : ""
   pnap_vlan_id    = var.cloud == "PNAP" ? module.PNAP_Infra.0.vlan_id : ""
+  pnap_net_cidr   = var.cloud == "PNAP" ? module.PNAP_Infra.0.subnet : ""
+  gcp_net_cidr    = var.cloud == "GCP" ? module.GCP_Infra.0.subnet : ""
+  eqm_net_cidr    = var.cloud == "EQM" ? module.EQM_Infra.0.subnet : ""
   bastion_ip      = coalesce(local.eqm_ip, local.gcp_ip, local.pnap_ip)
   username        = coalesce(local.eqm_user, local.gcp_user, local.pnap_user)
   cp_ips          = coalescelist(local.eqm_cp_ips, local.gcp_cp_ips, local.pnap_cp_ips)
-  worker_ips      = coalescelist(local.eqm_worker_ips, local.gcp_worker_ips, local.pnap_worker_ips)
+  worker_ips      = var.worker_node_count > 0 ? coalescelist(local.eqm_worker_ips, local.gcp_worker_ips, local.pnap_worker_ips) : []
   vlan_id         = coalesce(local.eqm_vlan_id, local.gcp_vlan_id, local.pnap_vlan_id)
+  subnet          = coalesce(local.eqm_net_cidr, local.gcp_net_cidr, local.pnap_net_cidr)
 }
 
 
@@ -153,7 +159,7 @@ module "Ansible_Bootstrap" {
   bastion_ip               = local.bastion_ip
   cp_ips                   = local.cp_ips
   worker_ips               = local.worker_ips
-  private_subnet           = var.private_subnet
+  private_subnet           = local.subnet
   cluster_name             = local.cluster_name
   abm_version              = var.abm_version
   operating_system         = var.operating_system

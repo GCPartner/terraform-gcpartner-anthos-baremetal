@@ -23,7 +23,7 @@ output "vlan_id" {
   description = "The vLan ID for the private network"
 }
 
-output "private_subnet" {
-  value       = var.private_subnet
-  description = "The private IP space for the cluster"
+output "subnet" {
+  value       = local.subnet
+  description = "The IP space for the cluster"
 }

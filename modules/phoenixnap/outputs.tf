@@ -18,6 +18,11 @@ output "worker_node_ips" {
 }
 
 output "vlan_id" {
-  value       = local.network.vlan_id
+  value       = var.network_type == "private" ? local.priv_network.vlan_id : local.pub_network.vlan_id
   description = "The vLan ID used for the private network"
+}
+
+output "subnet" {
+  value       = var.network_type == "private" ? local.priv_network.cidr : local.ip_block.cidr
+  description = "Public Network CIDR"
 }
