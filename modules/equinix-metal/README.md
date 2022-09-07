@@ -28,4 +28,5 @@
 | <a name="output_cp_node_ips"></a> [cp\_node\_ips](#output\_cp\_node\_ips) | First IP of control plane nodes |
 | <a name="output_worker_node_ips"></a> [worker\_node\_ips](#output\_worker\_node\_ips) | First IP of worker nodes |
 | <a name="output_vlan_id"></a> [vlan\_id](#output\_vlan\_id) | The vLan ID used for the private network |
+| <a name="output_subnet"></a> [subnet](#output\_subnet) | The private IP space for the cluster |
 <!-- END_TF_DOCS -->

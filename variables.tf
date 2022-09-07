@@ -34,12 +34,6 @@ variable "project_name" {
   description = "The name of the project if 'create_project' is 'true'."
 }
 
-variable "abm_version" {
-  type        = string
-  default     = "1.10.1"
-  description = "The version of Anthos on Baremetal to install"
-}
-
 variable "private_subnet" {
   type        = string
   default     = "172.31.254.0/24"
@@ -86,19 +80,19 @@ variable "private_network_id" {
 variable "ansible_playbook_version" {
   type        = string
   description = "The version of the ansible playbook to install"
-  default     = "v1.0.1"
+  default     = "v1.0.2"
 }
 
 variable "ansible_url" {
   type        = string
   description = "URL of the ansible code"
-  default     = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/v1.0.1.tar.gz"
+  default     = "https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/v1.0.2.tar.gz"
 }
 
 variable "ansible_tar_ball" {
   type        = string
   description = "Tarball of the ansible code"
-  default     = "v1.0.1.tar.gz"
+  default     = "v1.0.2.tar.gz"
 }
 
 # PhoenixNAP Vars

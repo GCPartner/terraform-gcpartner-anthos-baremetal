@@ -119,7 +119,7 @@ resource "null_resource" "write_ansible_inventory_header" {
       "echo 'gcp_project_id=${var.gcp_project_id}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo home_path=$HOME >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo '[bootstrap_node]' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
-      "echo '127.0.0.1' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo '127.0.0.1 ansible_python_interpreter=\"{{ home_path }}/bootstrap/ansible/bin/python\"' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo '[cp_nodes]' >> $HOME/bootstrap/${local.git_repo_name}/inventory"
     ]
   }
@@ -209,7 +209,7 @@ resource "null_resource" "execute_ansible" {
       "start=3",
       "while [ $start -gt 0 ]",
       "do",
-      "/usr/bin/timeout ${local.ansible_execute_timeout} ansible-playbook -i inventory site.yaml -b",
+      "/usr/bin/timeout ${local.ansible_execute_timeout} ansible-playbook -bi inventory site.yaml",
       "if [ $? -eq 0 ]; then",
       "break",
       "fi",
