@@ -1,7 +1,3 @@
-provider "google" {
-  project = var.gcp_project_id
-}
-
 locals {
   enabled_apis = [
     "anthos.googleapis.com",
