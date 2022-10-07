@@ -23,8 +23,8 @@ resource "local_file" "cluster_private_key_pem" {
 
 terraform {
   required_providers {
-    metal = {
-      source = "equinix/metal"
+    equinix = {
+      source = "equinix/equinix"
     }
     pnap = {
       source = "phoenixnap/pnap"
@@ -32,7 +32,11 @@ terraform {
   }
 }
 
-provider "metal" {
+provider "google" {
+  project = var.gcp_project_id
+}
+
+provider "equinix" {
   auth_token = var.metal_auth_token
 }
 
