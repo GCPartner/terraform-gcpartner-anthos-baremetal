@@ -27,3 +27,8 @@ output "subnet" {
   value       = local.subnet
   description = "The IP space for the cluster"
 }
+
+output "cluster_name" {
+  value       = local.cluster_name
+  description = "The name of the Anthos Cluster"
+}
