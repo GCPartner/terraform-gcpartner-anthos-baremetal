@@ -29,6 +29,6 @@ output "subnet" {
 }
 
 output "cluster_name" {
-  value = local.cluster_name
+  value       = local.cluster_name
   description = "The name of the Anthos Cluster"
 }

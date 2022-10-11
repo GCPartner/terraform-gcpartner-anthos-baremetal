@@ -20,7 +20,7 @@ locals {
 resource "equinix_metal_project_ssh_key" "ssh_pub_key" {
   name       = var.cluster_name
   public_key = var.ssh_key.public_key
-  project_id       = local.metal_project_id
+  project_id = local.metal_project_id
 }
 
 resource "equinix_metal_device" "cp_node" {
