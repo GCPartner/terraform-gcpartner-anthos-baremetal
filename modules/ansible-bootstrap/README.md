@@ -9,7 +9,7 @@
 | <a name="input_worker_node_count"></a> [worker\_node\_count](#input\_worker\_node\_count) | How many worker nodes to deploy | `number` | n/a | yes |
 | <a name="input_cp_ips"></a> [cp\_ips](#input\_cp\_ips) | ips for control plane nodes | `list(any)` | n/a | yes |
 | <a name="input_worker_ips"></a> [worker\_ips](#input\_worker\_ips) | ips for worker nodes | `list(any)` | n/a | yes |
-| <a name="input_private_subnet"></a> [private\_subnet](#input\_private\_subnet) | The private IP space for the cluster | `string` | n/a | yes |
+| <a name="input_server_subnet"></a> [server\_subnet](#input\_server\_subnet) | The IP space for the cluster | `string` | n/a | yes |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The ABM cluster name | `string` | n/a | yes |
 | <a name="input_operating_system"></a> [operating\_system](#input\_operating\_system) | The Operating system to deploy (Only ubuntu\_20\_04 has been tested) | `string` | n/a | yes |
 | <a name="input_username"></a> [username](#input\_username) | The username used to ssh to hosts | `string` | n/a | yes |
