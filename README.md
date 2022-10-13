@@ -12,6 +12,7 @@ The software in this repository has been tested sucessfully on the following hos
 * [gcloud command line](https://cloud.google.com/sdk/docs/install)
 * [terraform](https://www.terraform.io/downloads)
 * [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* [jq](https://stedolan.github.io/jq/download/)
 
 ### Accounts Needed
 * [Google Cloud Account](https://console.cloud.google.com/)
