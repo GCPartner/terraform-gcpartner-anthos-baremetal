@@ -123,6 +123,7 @@ locals {
   eqm_pub_net_id   = var.cloud == "EQM" ? "not_implemented" : ""
   eqm_pub_vlan_id  = var.cloud == "EQM" ? module.EQM_Infra.0.vlan_id : ""
   eqm_pub_cidr     = var.cloud == "EQM" ? module.EQM_Infra.0.subnet : ""
+  eqm_os_image     = var.cloud == "EQM" ? module.EQM_Infra.0.os_image : ""
 
   gcp_ip           = var.cloud == "GCP" ? module.GCP_Infra.0.bastion_ip : ""
   gcp_user         = var.cloud == "GCP" ? module.GCP_Infra.0.username : ""
@@ -134,6 +135,7 @@ locals {
   gcp_pub_net_id   = var.cloud == "GCP" ? "not_implemented" : ""
   gcp_pub_vlan_id  = var.cloud == "GCP" ? module.GCP_Infra.0.vlan_id : ""
   gcp_pub_cidr     = var.cloud == "GCP" ? module.GCP_Infra.0.subnet : ""
+  gcp_os_image     = var.cloud == "GCP" ? module.GCP_Infra.0.os_image : ""
 
   pnap_ip           = var.cloud == "PNAP" ? module.PNAP_Infra.0.bastion_ip : ""
   pnap_user         = var.cloud == "PNAP" ? module.PNAP_Infra.0.username : ""
@@ -145,6 +147,7 @@ locals {
   pnap_pub_net_id   = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["public_network"].id : ""
   pnap_pub_vlan_id  = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["public_network"].vlan_id : ""
   pnap_pub_cidr     = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["public_network"].cidr : ""
+  pnap_os_image     = var.cloud == "PNAP" ? module.PNAP_Infra.0.os_image : ""
 
   bastion_ip   = coalesce(local.eqm_ip, local.gcp_ip, local.pnap_ip)
   username     = coalesce(local.eqm_user, local.gcp_user, local.pnap_user)
@@ -156,6 +159,7 @@ locals {
   pub_net_id   = coalesce(local.eqm_pub_net_id, local.gcp_pub_net_id, local.pnap_pub_net_id)
   pub_vlan_id  = coalesce(local.eqm_pub_vlan_id, local.gcp_pub_vlan_id, local.pnap_pub_vlan_id)
   pub_cidr     = coalesce(local.eqm_pub_cidr, local.gcp_pub_cidr, local.pnap_pub_cidr)
+  os_image     = coalesce(local.eqm_os_image, local.gcp_os_image, local.pnap_os_image)
 }
 
 module "Ansible_Bootstrap" {

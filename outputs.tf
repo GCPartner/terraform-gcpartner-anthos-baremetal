@@ -48,6 +48,7 @@ output "ssh_key" {
 }
 
 output "network_details" {
+  description = "The network details for the nodes"
   value = {
     primary_network = var.network_type == "private" ? "private_network" : "public_network"
     private_network = {
@@ -61,4 +62,9 @@ output "network_details" {
       cidr    = local.pub_cidr
     }
   }
+}
+
+output "os_image" {
+  value       = local.os_image
+  description = "The OS Image used to build the nodes"
 }
