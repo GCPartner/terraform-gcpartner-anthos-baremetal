@@ -188,7 +188,7 @@ module "Ansible_Bootstrap" {
 }
 
 locals {
-  ssh_command            = "ssh -i ${pathexpand(format("~/.ssh/%s", local.ssh_key_name))} ${local.username}@${local.bastion_ip}"
+  ssh_command            = "ssh -o StrictHostKeyChecking=no -i ${pathexpand(format("~/.ssh/%s", local.ssh_key_name))} ${local.username}@${local.bastion_ip}"
   remote_kubeconfig_path = "$HOME/bootstrap/bmctl-workspace/${local.cluster_name}/${local.cluster_name}-kubeconfig"
 }
 
