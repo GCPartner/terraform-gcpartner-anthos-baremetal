@@ -28,6 +28,7 @@ output "subnet" {
 }
 
 output "network_details" {
+  description = "The network details for the nodes"
   value = {
     primary_network = var.network_type == "private" ? "private_network" : "public_network"
     private_network = {
@@ -41,4 +42,9 @@ output "network_details" {
       vlan_id = local.pub_network.vlan_id
     }
   }
+}
+
+output "os_image" {
+  value       = local.os_image
+  description = "The OS Image used to build the nodes"
 }

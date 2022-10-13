@@ -27,5 +27,6 @@
 | <a name="output_worker_node_ips"></a> [worker\_node\_ips](#output\_worker\_node\_ips) | First IP of worker nodes |
 | <a name="output_vlan_id"></a> [vlan\_id](#output\_vlan\_id) | The vLan ID used for the private network |
 | <a name="output_subnet"></a> [subnet](#output\_subnet) | Public Network CIDR |
-| <a name="output_network_details"></a> [network\_details](#output\_network\_details) | n/a |
+| <a name="output_network_details"></a> [network\_details](#output\_network\_details) | The network details for the nodes |
+| <a name="output_os_image"></a> [os\_image](#output\_os\_image) | The OS Image used to build the nodes |
 <!-- END_TF_DOCS -->

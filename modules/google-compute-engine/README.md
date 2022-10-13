@@ -29,4 +29,5 @@
 | <a name="output_cp_node_ips"></a> [cp\_node\_ips](#output\_cp\_node\_ips) | First IP of cp nodes |
 | <a name="output_vlan_id"></a> [vlan\_id](#output\_vlan\_id) | Not applicable for Google cloud |
 | <a name="output_subnet"></a> [subnet](#output\_subnet) | The private IP space for the cluster |
+| <a name="output_os_image"></a> [os\_image](#output\_os\_image) | The OS Image used to build the nodes |
 <!-- END_TF_DOCS -->

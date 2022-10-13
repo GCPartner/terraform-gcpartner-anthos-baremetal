@@ -29,3 +29,8 @@ output "subnet" {
   value       = var.private_subnet
   description = "The private IP space for the cluster"
 }
+
+output "os_image" {
+  value       = local.os_image
+  description = "The OS Image used to build the nodes"
+}
