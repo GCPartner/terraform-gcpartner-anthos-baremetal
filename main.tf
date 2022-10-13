@@ -160,6 +160,7 @@ locals {
   pub_vlan_id  = coalesce(local.eqm_pub_vlan_id, local.gcp_pub_vlan_id, local.pnap_pub_vlan_id)
   pub_cidr     = coalesce(local.eqm_pub_cidr, local.gcp_pub_cidr, local.pnap_pub_cidr)
   os_image     = coalesce(local.eqm_os_image, local.gcp_os_image, local.pnap_os_image)
+  
 }
 
 module "Ansible_Bootstrap" {
@@ -188,12 +189,15 @@ module "Ansible_Bootstrap" {
 }
 
 locals {
-  unix_home              = local.username == "root" ? "/root" : "/home/${var.username}"
   ssh_command            = "ssh -o StrictHostKeyChecking=no -i ${pathexpand(format("~/.ssh/%s", local.ssh_key_name))} ${local.username}@${local.bastion_ip}"
-  remote_kubeconfig_path = "${unix_home}/bootstrap/bmctl-workspace/${local.cluster_name}/${local.cluster_name}-kubeconfig"
+  unix_home              = local.username == "root" ? "/root" : "/home/${local.username}"
+  remote_kubeconfig_path = "${local.unix_home}/bootstrap/bmctl-workspace/${local.cluster_name}/${local.cluster_name}-kubeconfig"
 }
 
 data "external" "kubeconfig" {
+  depends_on = [
+    module.Ansible_Bootstrap
+  ]
   program = [
     "sh",
     "-c",
