@@ -134,7 +134,10 @@ vlan_id = "Not applicable for Google cloud"
 | <a name="output_ssh_key_path"></a> [ssh\_key\_path](#output\_ssh\_key\_path) | Path to the SSH Private key for the bastion host |
 | <a name="output_bastion_host_ip"></a> [bastion\_host\_ip](#output\_bastion\_host\_ip) | IP Address of the bastion host in the test environment |
 | <a name="output_bastion_host_username"></a> [bastion\_host\_username](#output\_bastion\_host\_username) | Username for the bastion host in the test environment |
-| <a name="output_vlan_id"></a> [vlan\_id](#output\_vlan\_id) | The vLan ID for the private network |
+| <a name="output_vlan_id"></a> [vlan\_id](#output\_vlan\_id) | The vLan ID for the server network |
 | <a name="output_subnet"></a> [subnet](#output\_subnet) | The IP space for the cluster |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | The name of the Anthos Cluster |
+| <a name="output_kubeconfig"></a> [kubeconfig](#output\_kubeconfig) | The kubeconfig for the Anthos Cluster |
+| <a name="output_ssh_key"></a> [ssh\_key](#output\_ssh\_key) | SSH Public and Private Key |
+| <a name="output_network_details"></a> [network\_details](#output\_network\_details) | n/a |
 <!-- END_TF_DOCS -->

@@ -16,6 +16,9 @@ resource "pnap_ip_block" "new_ip_block" {
   location        = var.pnap_location
   cidr_block_size = "/28"
   description     = "IP block for public hosts and k8s services"
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "pnap_public_network" "new_network" {
@@ -27,6 +30,9 @@ resource "pnap_public_network" "new_network" {
     public_network_ip_block {
       id = pnap_ip_block.new_ip_block[0].id
     }
+  }
+  lifecycle {
+    ignore_changes = all
   }
 }
 
@@ -45,6 +51,9 @@ resource "pnap_private_network" "new_network" {
   name     = format("%s-private-net", var.cluster_name)
   cidr     = var.private_subnet
   location = var.pnap_location
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 data "pnap_private_network" "existing_network" {
@@ -139,84 +148,3 @@ resource "pnap_server" "worker_node" {
     ignore_changes = all
   }
 }
-
-/* 
-data "template_file" "node_networking_cp" {
-  depends_on = [
-    data.pnap_private_network.existing_network,
-    pnap_private_network.new_network
-  ]
-  count    = var.cp_node_count
-  template = file("${path.module}/templates/node_networking.py")
-  vars = {
-    ip_cidr = format("%s/%s", cidrhost(var.private_subnet, count.index + 2), split("/", var.private_subnet).1)
-    vlan_id = local.network.vlan_id
-  }
-}
-
-resource "null_resource" "node_networking_cp" {
-  count = var.cp_node_count
-  connection {
-    type        = "ssh"
-    user        = local.username
-    private_key = var.ssh_key.private_key
-    host        = element(tolist(element(pnap_server.cp_node.*.public_ip_addresses, count.index)), 0)
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "mkdir -p $HOME/bootstrap/"
-    ]
-  }
-
-  provisioner "file" {
-    content     = element(data.template_file.node_networking_cp.*.rendered, count.index)
-    destination = "/home/${local.username}/bootstrap/node_networking.py"
-  }
-
-  provisioner "remote-exec" {
-    inline = ["sudo python3 $HOME/bootstrap/node_networking.py"]
-  }
-}
-
-data "template_file" "node_networking_worker" {
-  depends_on = [
-    data.pnap_private_network.existing_network,
-    pnap_private_network.new_network
-  ]
-  count    = var.worker_node_count
-  template = file("${path.module}/templates/node_networking.py")
-  vars = {
-    ip_cidr = format("%s/%s", cidrhost(var.private_subnet, count.index + 5), split("/", var.private_subnet).1)
-    vlan_id = local.network.vlan_id
-  }
-}
-
-resource "null_resource" "node_networking_worker" {
-  count = var.worker_node_count
-  connection {
-    type        = "ssh"
-    user        = local.username
-    private_key = var.ssh_key.private_key
-    host        = element(tolist(element(pnap_server.worker_node.*.public_ip_addresses, count.index)), 0)
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "mkdir -p $HOME/bootstrap/"
-    ]
-  }
-
-  provisioner "file" {
-    content     = element(data.template_file.node_networking_worker.*.rendered, count.index)
-    destination = "/home/${local.username}/bootstrap/node_networking.py"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo python3 $HOME/bootstrap/node_networking.py",
-      "rm -f $HOME/bootstrap/node_networking.py"
-    ]
-  }
-}
- */

@@ -31,9 +31,9 @@ variable "worker_ips" {
   description = "ips for worker nodes"
 }
 
-variable "private_subnet" {
+variable "server_subnet" {
   type        = string
-  description = "The private IP space for the cluster"
+  description = "The IP space for the cluster"
 }
 
 variable "cluster_name" {

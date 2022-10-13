@@ -26,3 +26,19 @@ output "subnet" {
   value       = var.network_type == "private" ? local.priv_network.cidr : local.ip_block.cidr
   description = "Public Network CIDR"
 }
+
+output "network_details" {
+  value = {
+    primary_network = var.network_type == "private" ? "private_network" : "public_network"
+    private_network = {
+      id      = local.priv_network.id
+      cidr    = local.priv_network.cidr
+      vlan_id = local.priv_network.vlan_id
+    }
+    public_network = {
+      id      = local.pub_network.id
+      cidr    = local.ip_block.cidr
+      vlan_id = local.pub_network.vlan_id
+    }
+  }
+}
