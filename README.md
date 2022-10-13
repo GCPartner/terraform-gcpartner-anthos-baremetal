@@ -139,5 +139,6 @@ vlan_id = "Not applicable for Google cloud"
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | The name of the Anthos Cluster |
 | <a name="output_kubeconfig"></a> [kubeconfig](#output\_kubeconfig) | The kubeconfig for the Anthos Cluster |
 | <a name="output_ssh_key"></a> [ssh\_key](#output\_ssh\_key) | SSH Public and Private Key |
-| <a name="output_network_details"></a> [network\_details](#output\_network\_details) | n/a |
+| <a name="output_network_details"></a> [network\_details](#output\_network\_details) | The network details for the nodes |
+| <a name="output_os_image"></a> [os\_image](#output\_os\_image) | The OS Image used to build the nodes |
 <!-- END_TF_DOCS -->
