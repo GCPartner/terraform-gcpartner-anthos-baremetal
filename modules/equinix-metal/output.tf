@@ -8,7 +8,7 @@ output "username" {
 }
 
 output "cp_node_ips" {
-  value       = [equinix_metal_device.cp_node.*.access_private_ipv4][0]
+  value       = [equinix_metal_device.cp_node.*.access_public_ipv4][0]
   description = "First IP of control plane nodes"
 }
 
@@ -18,7 +18,7 @@ output "cp_node_ids" {
 }
 
 output "worker_node_ips" {
-  value       = [equinix_metal_device.worker_node.*.access_private_ipv4][0]
+  value       = [equinix_metal_device.worker_node.*.access_public_ipv4][0]
   description = "First IP of worker nodes"
 }
 
