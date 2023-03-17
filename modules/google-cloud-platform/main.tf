@@ -24,7 +24,7 @@ locals {
     "cloud-ops",
     "storage",
     "bmctl",
-    
+
   ]
   role_map = [
     { role = "roles/gkehub.connect", service_account = "connect" },
