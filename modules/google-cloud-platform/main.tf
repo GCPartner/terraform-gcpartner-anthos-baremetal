@@ -4,22 +4,27 @@ locals {
     "anthosaudit.googleapis.com",
     "anthosgke.googleapis.com",
     "cloudresourcemanager.googleapis.com",
+    "connectgateway.googleapis.com",
     "container.googleapis.com",
     "gkeconnect.googleapis.com",
     "gkehub.googleapis.com",
     "iam.googleapis.com",
-    "opsconfigmonitoring.googleapis.com",
     "logging.googleapis.com",
     "monitoring.googleapis.com",
+    "opsconfigmonitoring.googleapis.com",
     "serviceusage.googleapis.com",
-    "stackdriver.googleapis.com"
+    "stackdriver.googleapis.com",
+    "storage.googleapis.com"
   ]
+
   service_accounts = [
     "gcr",
     "connect",
     "register",
     "cloud-ops",
-    "bmctl"
+    "storage",
+    "bmctl",
+    
   ]
   role_map = [
     { role = "roles/gkehub.connect", service_account = "connect" },
@@ -27,8 +32,9 @@ locals {
     { role = "roles/logging.logWriter", service_account = "cloud-ops" },
     { role = "roles/monitoring.metricWriter", service_account = "cloud-ops" },
     { role = "roles/stackdriver.resourceMetadata.writer", service_account = "cloud-ops" },
-    { role = "roles/monitoring.dashboardEditor", service_account = "cloud-ops" },
     { role = "roles/opsconfigmonitoring.resourceMetadata.writer", service_account = "cloud-ops" },
+    { role = "roles/monitoring.dashboardEditor", service_account = "cloud-ops" },
+    { role = "roles/storage.admin", service_account = "storage" },
     { role = "roles/compute.viewer", service_account = "bmctl" }
   ]
 }

@@ -10,6 +10,10 @@ resource "equinix_metal_project" "new_project" {
   count           = var.create_project ? 1 : 0
   name            = var.project_name
   organization_id = var.metal_organization_id
+  bgp_config {
+    deployment_type = "local"
+    asn             = 65000
+  }
 }
 
 locals {
@@ -30,11 +34,18 @@ resource "equinix_metal_device" "cp_node" {
   count            = var.cp_node_count
   hostname         = format("%s-cp-%02d", var.cluster_name, count.index + 1)
   plan             = var.metal_worker_plan
-  facilities       = [var.metal_facility]
+  metro            = var.metal_metro
   operating_system = var.operating_system
   billing_cycle    = var.metal_billing_cycle
   project_id       = local.metal_project_id
-  tags             = ["anthos", "private"]
+  tags             = ["anthos", "baremetal"]
+  ip_address {
+    type = "private_ipv4"
+    cidr = 31
+  }
+  ip_address {
+    type = "public_ipv4"
+  }
 }
 
 resource "equinix_metal_device" "worker_node" {
@@ -44,13 +55,47 @@ resource "equinix_metal_device" "worker_node" {
   count            = var.worker_node_count
   hostname         = format("%s-worker-%02d", var.cluster_name, count.index + 1)
   plan             = var.metal_worker_plan
-  facilities       = [var.metal_facility]
+  metro            = var.metal_metro
   operating_system = var.operating_system
   billing_cycle    = var.metal_billing_cycle
   project_id       = local.metal_project_id
-  tags             = ["anthos", "private"]
+  tags             = ["anthos", "baremetal"]
+  ip_address {
+    type = "private_ipv4"
+    cidr = 29
+  }
+  ip_address {
+    type = "public_ipv4"
+  }
 }
 
+resource "equinix_metal_bgp_session" "enable_cp_bgp" {
+  count          = var.cp_node_count
+  device_id      = element(equinix_metal_device.cp_node.*.id, count.index)
+  address_family = "ipv4"
+}
+
+resource "equinix_metal_bgp_session" "enable_worker_bgp" {
+  count          = var.worker_node_count
+  device_id      = element(equinix_metal_device.worker_node.*.id, count.index)
+  address_family = "ipv4"
+}
+
+resource "equinix_metal_reserved_ip_block" "cp_vip" {
+  project_id = local.metal_project_id
+  type       = "public_ipv4"
+  metro      = var.metal_metro
+  quantity   = 1
+}
+
+resource "equinix_metal_reserved_ip_block" "ingress_vip" {
+  project_id = local.metal_project_id
+  type       = "public_ipv4"
+  metro      = var.metal_metro
+  quantity   = 1
+}
+
+/*
 # for cp and worker
 resource "equinix_metal_device_network_type" "convert_network_cp_node" {
   count     = var.cp_node_count
@@ -155,3 +200,4 @@ resource "null_resource" "worker_node_networking" {
     inline = ["bash $HOME/bootstrap/node_networking.sh"]
   }
 }
+*/

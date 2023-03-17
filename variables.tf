@@ -77,6 +77,7 @@ variable "private_network_id" {
 }
 
 # Ansible Vars
+# TODO: It looks like ansible_playbook_version is not used... It would be nice to just use tag:v1.2.3 or branch:BranchName and make the right choice for which .tar.gz to grab
 variable "ansible_playbook_version" {
   type        = string
   description = "The version of the ansible playbook to install"
@@ -170,9 +171,9 @@ variable "metal_project_id" {
   description = "The project ID to use for EQM"
 }
 
-variable "metal_facility" {
+variable "metal_metro" {
   type        = string
-  default     = "ny5"
+  default     = "ny"
   description = "Equinix Metal Facility to deploy into"
 }
 

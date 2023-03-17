@@ -104,7 +104,7 @@ module "EQM_Infra" {
   metal_worker_plan     = var.metal_worker_plan
   cp_node_count         = local.cp_node_count
   worker_node_count     = var.worker_node_count
-  metal_facility        = var.metal_facility
+  metal_metro           = var.metal_metro
   operating_system      = var.operating_system
   metal_billing_cycle   = var.metal_billing_cycle
   cluster_name          = local.cluster_name
@@ -117,6 +117,8 @@ locals {
   eqm_user         = var.cloud == "EQM" ? module.EQM_Infra.0.username : ""
   eqm_cp_ips       = var.cloud == "EQM" ? module.EQM_Infra.0.cp_node_ips : []
   eqm_worker_ips   = var.cloud == "EQM" ? module.EQM_Infra.0.worker_node_ips : []
+  eqm_cp_ids       = var.cloud == "EQM" ? module.EQM_Infra.0.cp_node_ids : []
+  eqm_worker_ids   = var.cloud == "EQM" ? module.EQM_Infra.0.worker_node_ids : []
   eqm_priv_net_id  = var.cloud == "EQM" ? "not_implemented" : ""
   eqm_priv_vlan_id = var.cloud == "EQM" ? module.EQM_Infra.0.vlan_id : ""
   eqm_priv_cidr    = var.cloud == "EQM" ? module.EQM_Infra.0.subnet : ""
@@ -124,11 +126,15 @@ locals {
   eqm_pub_vlan_id  = var.cloud == "EQM" ? module.EQM_Infra.0.vlan_id : ""
   eqm_pub_cidr     = var.cloud == "EQM" ? module.EQM_Infra.0.subnet : ""
   eqm_os_image     = var.cloud == "EQM" ? module.EQM_Infra.0.os_image : ""
+  eqm_cp_vip       = var.cloud == "EQM" ? module.EQM_Infra.0.cp_vip : ""
+  eqm_ingress_vip  = var.cloud == "EQM" ? module.EQM_Infra.0.ingress_vip : ""
 
   gcp_ip           = var.cloud == "GCP" ? module.GCP_Infra.0.bastion_ip : ""
   gcp_user         = var.cloud == "GCP" ? module.GCP_Infra.0.username : ""
   gcp_cp_ips       = var.cloud == "GCP" ? module.GCP_Infra.0.cp_node_ips : []
   gcp_worker_ips   = var.cloud == "GCP" ? module.GCP_Infra.0.worker_node_ips : []
+  gcp_cp_ids       = var.cloud == "GCP" ? ["not_implemented"] : []
+  gcp_worker_ids   = var.cloud == "GCP" ? ["not_implemented"] : []
   gcp_priv_net_id  = var.cloud == "GCP" ? "not_implemented" : ""
   gcp_priv_vlan_id = var.cloud == "GCP" ? module.GCP_Infra.0.vlan_id : ""
   gcp_priv_cidr    = var.cloud == "GCP" ? module.GCP_Infra.0.subnet : ""
@@ -136,11 +142,15 @@ locals {
   gcp_pub_vlan_id  = var.cloud == "GCP" ? module.GCP_Infra.0.vlan_id : ""
   gcp_pub_cidr     = var.cloud == "GCP" ? module.GCP_Infra.0.subnet : ""
   gcp_os_image     = var.cloud == "GCP" ? module.GCP_Infra.0.os_image : ""
+  gcp_cp_vip       = var.cloud == "GCP" ? "not_implemented" : ""
+  gcp_ingress_vip  = var.cloud == "GCP" ? "not_implemented" : ""
 
   pnap_ip           = var.cloud == "PNAP" ? module.PNAP_Infra.0.bastion_ip : ""
   pnap_user         = var.cloud == "PNAP" ? module.PNAP_Infra.0.username : ""
   pnap_cp_ips       = var.cloud == "PNAP" ? module.PNAP_Infra.0.cp_node_ips : []
   pnap_worker_ips   = var.cloud == "PNAP" ? module.PNAP_Infra.0.worker_node_ips : []
+  pnap_cp_ids       = var.cloud == "PNAP" ? ["not_implemented"] : []
+  pnap_worker_ids   = var.cloud == "PNAP" ? ["not_implemented"] : []
   pnap_priv_net_id  = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["private_network"].id : ""
   pnap_priv_vlan_id = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["private_network"].vlan_id : ""
   pnap_priv_cidr    = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["private_network"].cidr : ""
@@ -148,11 +158,15 @@ locals {
   pnap_pub_vlan_id  = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["public_network"].vlan_id : ""
   pnap_pub_cidr     = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["public_network"].cidr : ""
   pnap_os_image     = var.cloud == "PNAP" ? module.PNAP_Infra.0.os_image : ""
+  pnap_cp_vip       = var.cloud == "PNAP" ? "not_implemented" : ""
+  pnap_ingress_vip  = var.cloud == "PNAP" ? "not_implemented" : ""
 
   bastion_ip   = coalesce(local.eqm_ip, local.gcp_ip, local.pnap_ip)
   username     = coalesce(local.eqm_user, local.gcp_user, local.pnap_user)
   cp_ips       = coalescelist(local.eqm_cp_ips, local.gcp_cp_ips, local.pnap_cp_ips)
   worker_ips   = var.worker_node_count > 0 ? coalescelist(local.eqm_worker_ips, local.gcp_worker_ips, local.pnap_worker_ips) : []
+  cp_ids       = coalescelist(local.eqm_cp_ids, local.gcp_cp_ids, local.pnap_cp_ids)
+  worker_ids   = var.worker_node_count > 0 ? coalescelist(local.eqm_worker_ids, local.gcp_worker_ids, local.pnap_worker_ids) : []
   priv_net_id  = coalesce(local.eqm_priv_net_id, local.gcp_priv_net_id, local.pnap_priv_net_id)
   priv_vlan_id = coalesce(local.eqm_priv_vlan_id, local.gcp_priv_vlan_id, local.pnap_priv_vlan_id)
   priv_cidr    = coalesce(local.eqm_priv_cidr, local.gcp_priv_cidr, local.pnap_priv_cidr)
@@ -160,7 +174,9 @@ locals {
   pub_vlan_id  = coalesce(local.eqm_pub_vlan_id, local.gcp_pub_vlan_id, local.pnap_pub_vlan_id)
   pub_cidr     = coalesce(local.eqm_pub_cidr, local.gcp_pub_cidr, local.pnap_pub_cidr)
   os_image     = coalesce(local.eqm_os_image, local.gcp_os_image, local.pnap_os_image)
-  
+  cp_vip       = coalesce(local.eqm_cp_vip, local.gcp_cp_vip, local.pnap_cp_vip)
+  ingress_vip  = coalesce(local.eqm_ingress_vip, local.gcp_ingress_vip, local.pnap_ingress_vip)
+
 }
 
 module "Ansible_Bootstrap" {
@@ -172,6 +188,7 @@ module "Ansible_Bootstrap" {
   ]
   source                   = "./modules/ansible-bootstrap"
   ssh_key                  = local.ssh_key
+  cloud                    = var.cloud
   cp_node_count            = local.cp_node_count
   worker_node_count        = var.worker_node_count
   bastion_ip               = local.bastion_ip
@@ -186,6 +203,10 @@ module "Ansible_Bootstrap" {
   gcp_project_id           = var.gcp_project_id
   ansible_tar_ball         = var.ansible_tar_ball
   ansible_url              = var.ansible_url
+  cp_ids                   = local.cp_ids
+  worker_ids               = local.worker_ids
+  cp_vip                   = local.cp_vip
+  ingress_vip              = local.ingress_vip
 }
 
 locals {
@@ -193,7 +214,7 @@ locals {
   unix_home              = local.username == "root" ? "/root" : "/home/${local.username}"
   remote_kubeconfig_path = "${local.unix_home}/bootstrap/bmctl-workspace/${local.cluster_name}/${local.cluster_name}-kubeconfig"
 }
-
+/*
 data "external" "kubeconfig" {
   depends_on = [
     module.Ansible_Bootstrap
@@ -204,3 +225,4 @@ data "external" "kubeconfig" {
     "jq -n --arg content \"$(${local.ssh_command} cat ${local.remote_kubeconfig_path})\" '{$content}'",
   ]
 }
+*/

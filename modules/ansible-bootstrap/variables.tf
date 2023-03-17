@@ -6,6 +6,11 @@ variable "ssh_key" {
   description = "SSH Public and Private Key"
 }
 
+variable "cloud" {
+  type        = string
+  description = "GCP (Google Cloud Platform), EQM (Equinx Metal), or PNAP (Phoenix Nap) to deploy the 'Nodes'"
+}
+
 variable "bastion_ip" {
   type        = string
   description = "The bastion host/admin workstation public IP Address"
@@ -29,6 +34,16 @@ variable "cp_ips" {
 variable "worker_ips" {
   type        = list(any)
   description = "ips for worker nodes"
+}
+
+variable "cp_ids" {
+  type        = list(any)
+  description = "ids for control plane nodes"
+}
+
+variable "worker_ids" {
+  type        = list(any)
+  description = "ids for worker nodes"
 }
 
 variable "server_subnet" {
@@ -75,4 +90,14 @@ variable "gcp_sa_keys" {
 variable "gcp_project_id" {
   type        = string
   description = "The project ID to use (Same variable for GCP and EQM)"
+}
+
+variable "cp_vip" {
+  type        = string
+  description = "The control plan VIP"
+}
+
+variable "ingress_vip" {
+  type        = string
+  description = "The ingress plan VIP"
 }

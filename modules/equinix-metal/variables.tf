@@ -5,7 +5,6 @@ variable "metal_auth_token" {
 
 variable "metal_organization_id" {
   type        = string
-  default     = "null"
   description = "Equinix Metal Organization ID"
 }
 
@@ -16,13 +15,11 @@ variable "create_project" {
 
 variable "project_name" {
   type        = string
-  default     = "null"
   description = "The name of the project if 'create_project' is 'true'."
 }
 
 variable "project_id" {
   type        = string
-  default     = "null"
   description = "The project ID to use, if not creating a new one"
 }
 
@@ -46,9 +43,8 @@ variable "metal_worker_plan" {
   description = "Equinix Metal device type to deploy"
 }
 
-variable "metal_facility" {
+variable "metal_metro" {
   type        = string
-  default     = "ny5"
   description = "Equinix Metal Facility to deploy into"
 }
 

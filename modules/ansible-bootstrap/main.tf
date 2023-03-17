@@ -46,7 +46,7 @@ resource "null_resource" "install_ansible" {
       "$BIN_PATH/pip install virtualenv",
       "$BIN_PATH/virtualenv ansible",
       ". ansible/bin/activate",
-      "pip -q install ansible netaddr",
+      "pip -q install ansible netaddr jmespath",
       "echo '[defaults]' > $HOME/.ansible.cfg",
       "echo 'host_key_checking = False' >> $HOME/.ansible.cfg",
       "rm -f get-pip.py"
@@ -117,6 +117,9 @@ resource "null_resource" "write_ansible_inventory_header" {
       "echo 'cp_node_count=${var.cp_node_count}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'worker_node_count=${var.worker_node_count}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'gcp_project_id=${var.gcp_project_id}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo 'cloud=${var.cloud}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo 'cp_vip=${var.cp_vip}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo 'ingress_vip=${var.ingress_vip}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo home_path=$HOME >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo '[bootstrap_node]' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo '127.0.0.1 ansible_python_interpreter=\"{{ home_path }}/bootstrap/ansible/bin/python\"' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
@@ -126,7 +129,8 @@ resource "null_resource" "write_ansible_inventory_header" {
 }
 
 resource "null_resource" "write_cp_nodes_to_ansible_inventory" {
-  count = var.cp_node_count
+  # Only run this if the cloud IS NOT Equinix Metal
+  count = var.cloud != "EQM" ? var.cp_node_count : 0
   depends_on = [
     null_resource.write_ansible_inventory_header
   ]
@@ -146,9 +150,32 @@ resource "null_resource" "write_cp_nodes_to_ansible_inventory" {
   }
 }
 
+resource "null_resource" "write_eqm_cp_nodes_to_ansible_inventory" {
+  # Only run this if the cloud IS Equinix Metal
+  count = var.cloud == "EQM" ? var.cp_node_count : 0
+  depends_on = [
+    null_resource.write_ansible_inventory_header
+  ]
+
+  connection {
+    type        = "ssh"
+    user        = var.username
+    private_key = var.ssh_key.private_key
+    host        = var.bastion_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sleep ${count.index + 1}",
+      "echo '${var.cp_ips[count.index]} id=${var.cp_ids[count.index]}' >> $HOME/bootstrap/${local.git_repo_name}/inventory"
+    ]
+  }
+}
+
 resource "null_resource" "write_worker_header_to_ansible_inventory" {
   depends_on = [
-    null_resource.write_cp_nodes_to_ansible_inventory
+    null_resource.write_cp_nodes_to_ansible_inventory,
+    null_resource.write_eqm_cp_nodes_to_ansible_inventory
   ]
 
   connection {
@@ -166,7 +193,8 @@ resource "null_resource" "write_worker_header_to_ansible_inventory" {
 }
 
 resource "null_resource" "write_worker_nodes_to_ansible_inventory" {
-  count = var.worker_node_count
+  # Only run this if the cloud IS NOT Equinix Metal
+  count = var.cloud != "EQM" ? var.worker_node_count : 0
   depends_on = [
     null_resource.write_worker_header_to_ansible_inventory
   ]
@@ -186,6 +214,28 @@ resource "null_resource" "write_worker_nodes_to_ansible_inventory" {
   }
 }
 
+resource "null_resource" "write_eqm_worker_nodes_to_ansible_inventory" {
+  # Only run this if the cloud IS Equinix Metal
+  count = var.cloud == "EQM" ? var.worker_node_count : 0
+  depends_on = [
+    null_resource.write_worker_header_to_ansible_inventory
+  ]
+
+  connection {
+    type        = "ssh"
+    user        = var.username
+    private_key = var.ssh_key.private_key
+    host        = var.bastion_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sleep ${count.index + 1}",
+      "echo '${var.worker_ips[count.index]} id=${var.worker_ids[count.index]}' >> $HOME/bootstrap/${local.git_repo_name}/inventory"
+    ]
+  }
+}
+
 resource "null_resource" "execute_ansible" {
   connection {
     type        = "ssh"
@@ -196,6 +246,7 @@ resource "null_resource" "execute_ansible" {
   depends_on = [
     null_resource.download_ansible_playbook,
     null_resource.write_worker_nodes_to_ansible_inventory,
+    null_resource.write_eqm_worker_nodes_to_ansible_inventory,
     null_resource.install_ansible,
     null_resource.write_gcp_sa_keys
   ]
@@ -218,4 +269,3 @@ resource "null_resource" "execute_ansible" {
     ]
   }
 }
-

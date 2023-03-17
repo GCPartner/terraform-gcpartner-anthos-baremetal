@@ -34,13 +34,13 @@ output "cluster_name" {
   value       = local.cluster_name
   description = "The name of the Anthos Cluster"
 }
-
+/*
 output "kubeconfig" {
   sensitive   = true
   description = "The kubeconfig for the Anthos Cluster"
   value       = data.external.kubeconfig.result.content
 }
-
+*/
 output "ssh_key" {
   sensitive   = true
   description = "SSH Public and Private Key"
