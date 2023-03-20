@@ -120,6 +120,8 @@ resource "null_resource" "write_ansible_inventory_header" {
       "echo 'cloud=${var.cloud}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'cp_vip=${var.cp_vip}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'ingress_vip=${var.ingress_vip}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo 'eqm_auth_token=${var.eqm_auth_token}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo 'eqm_project_id=${var.eqm_project_id}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo home_path=$HOME >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo '[bootstrap_node]' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo '127.0.0.1 ansible_python_interpreter=\"{{ home_path }}/bootstrap/ansible/bin/python\"' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
@@ -167,7 +169,7 @@ resource "null_resource" "write_eqm_cp_nodes_to_ansible_inventory" {
   provisioner "remote-exec" {
     inline = [
       "sleep ${count.index + 1}",
-      "echo '${var.cp_ips[count.index]} id=${var.cp_ids[count.index]}' >> $HOME/bootstrap/${local.git_repo_name}/inventory"
+      "echo '${var.cp_ips[count.index]}' >> $HOME/bootstrap/${local.git_repo_name}/inventory"
     ]
   }
 }
@@ -231,7 +233,7 @@ resource "null_resource" "write_eqm_worker_nodes_to_ansible_inventory" {
   provisioner "remote-exec" {
     inline = [
       "sleep ${count.index + 1}",
-      "echo '${var.worker_ips[count.index]} id=${var.worker_ids[count.index]}' >> $HOME/bootstrap/${local.git_repo_name}/inventory"
+      "echo '${var.worker_ips[count.index]}' >> $HOME/bootstrap/${local.git_repo_name}/inventory"
     ]
   }
 }

@@ -117,8 +117,6 @@ locals {
   eqm_user         = var.cloud == "EQM" ? module.EQM_Infra.0.username : ""
   eqm_cp_ips       = var.cloud == "EQM" ? module.EQM_Infra.0.cp_node_ips : []
   eqm_worker_ips   = var.cloud == "EQM" ? module.EQM_Infra.0.worker_node_ips : []
-  eqm_cp_ids       = var.cloud == "EQM" ? module.EQM_Infra.0.cp_node_ids : []
-  eqm_worker_ids   = var.cloud == "EQM" ? module.EQM_Infra.0.worker_node_ids : []
   eqm_priv_net_id  = var.cloud == "EQM" ? "not_implemented" : ""
   eqm_priv_vlan_id = var.cloud == "EQM" ? module.EQM_Infra.0.vlan_id : ""
   eqm_priv_cidr    = var.cloud == "EQM" ? module.EQM_Infra.0.subnet : ""
@@ -133,8 +131,6 @@ locals {
   gcp_user         = var.cloud == "GCP" ? module.GCP_Infra.0.username : ""
   gcp_cp_ips       = var.cloud == "GCP" ? module.GCP_Infra.0.cp_node_ips : []
   gcp_worker_ips   = var.cloud == "GCP" ? module.GCP_Infra.0.worker_node_ips : []
-  gcp_cp_ids       = var.cloud == "GCP" ? ["not_implemented"] : []
-  gcp_worker_ids   = var.cloud == "GCP" ? ["not_implemented"] : []
   gcp_priv_net_id  = var.cloud == "GCP" ? "not_implemented" : ""
   gcp_priv_vlan_id = var.cloud == "GCP" ? module.GCP_Infra.0.vlan_id : ""
   gcp_priv_cidr    = var.cloud == "GCP" ? module.GCP_Infra.0.subnet : ""
@@ -149,8 +145,6 @@ locals {
   pnap_user         = var.cloud == "PNAP" ? module.PNAP_Infra.0.username : ""
   pnap_cp_ips       = var.cloud == "PNAP" ? module.PNAP_Infra.0.cp_node_ips : []
   pnap_worker_ips   = var.cloud == "PNAP" ? module.PNAP_Infra.0.worker_node_ips : []
-  pnap_cp_ids       = var.cloud == "PNAP" ? ["not_implemented"] : []
-  pnap_worker_ids   = var.cloud == "PNAP" ? ["not_implemented"] : []
   pnap_priv_net_id  = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["private_network"].id : ""
   pnap_priv_vlan_id = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["private_network"].vlan_id : ""
   pnap_priv_cidr    = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["private_network"].cidr : ""
@@ -165,8 +159,6 @@ locals {
   username     = coalesce(local.eqm_user, local.gcp_user, local.pnap_user)
   cp_ips       = coalescelist(local.eqm_cp_ips, local.gcp_cp_ips, local.pnap_cp_ips)
   worker_ips   = var.worker_node_count > 0 ? coalescelist(local.eqm_worker_ips, local.gcp_worker_ips, local.pnap_worker_ips) : []
-  cp_ids       = coalescelist(local.eqm_cp_ids, local.gcp_cp_ids, local.pnap_cp_ids)
-  worker_ids   = var.worker_node_count > 0 ? coalescelist(local.eqm_worker_ids, local.gcp_worker_ids, local.pnap_worker_ids) : []
   priv_net_id  = coalesce(local.eqm_priv_net_id, local.gcp_priv_net_id, local.pnap_priv_net_id)
   priv_vlan_id = coalesce(local.eqm_priv_vlan_id, local.gcp_priv_vlan_id, local.pnap_priv_vlan_id)
   priv_cidr    = coalesce(local.eqm_priv_cidr, local.gcp_priv_cidr, local.pnap_priv_cidr)
@@ -203,10 +195,10 @@ module "Ansible_Bootstrap" {
   gcp_project_id           = var.gcp_project_id
   ansible_tar_ball         = var.ansible_tar_ball
   ansible_url              = var.ansible_url
-  cp_ids                   = local.cp_ids
-  worker_ids               = local.worker_ids
   cp_vip                   = local.cp_vip
   ingress_vip              = local.ingress_vip
+  eqmetal_auth_token =  = var.eqmetal_auth_token
+  eqm_project_id = var.eqm_project_id
 }
 
 locals {

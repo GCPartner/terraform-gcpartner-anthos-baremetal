@@ -36,16 +36,6 @@ variable "worker_ips" {
   description = "ips for worker nodes"
 }
 
-variable "cp_ids" {
-  type        = list(any)
-  description = "ids for control plane nodes"
-}
-
-variable "worker_ids" {
-  type        = list(any)
-  description = "ids for worker nodes"
-}
-
 variable "server_subnet" {
   type        = string
   description = "The IP space for the cluster"
@@ -100,4 +90,14 @@ variable "cp_vip" {
 variable "ingress_vip" {
   type        = string
   description = "The ingress plan VIP"
+}
+
+variable "metal_project_id" {
+  type        = string
+  description = "The project ID to use for EQM"
+}
+
+variable "metal_auth_token" {
+  type        = string
+  description = "Equinix Metal API Key"
 }
