@@ -197,8 +197,8 @@ module "Ansible_Bootstrap" {
   ansible_url              = var.ansible_url
   cp_vip                   = local.cp_vip
   ingress_vip              = local.ingress_vip
-  eqmetal_auth_token =  = var.eqmetal_auth_token
-  eqm_project_id = var.eqm_project_id
+  metal_auth_token         = var.metal_auth_token
+  metal_project_id         = var.metal_project_id
 }
 
 locals {
@@ -206,7 +206,7 @@ locals {
   unix_home              = local.username == "root" ? "/root" : "/home/${local.username}"
   remote_kubeconfig_path = "${local.unix_home}/bootstrap/bmctl-workspace/${local.cluster_name}/${local.cluster_name}-kubeconfig"
 }
-/*
+
 data "external" "kubeconfig" {
   depends_on = [
     module.Ansible_Bootstrap
@@ -217,4 +217,4 @@ data "external" "kubeconfig" {
     "jq -n --arg content \"$(${local.ssh_command} cat ${local.remote_kubeconfig_path})\" '{$content}'",
   ]
 }
-*/
+
