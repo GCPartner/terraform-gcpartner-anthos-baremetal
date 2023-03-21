@@ -81,7 +81,7 @@ variable "private_network_id" {
 variable "ansible_playbook_version" {
   type        = string
   description = "The version of the ansible playbook to install"
-  default     = "v1.0.3"
+  default     = "v1.14.2-001"
 }
 
 variable "ansible_url" {
