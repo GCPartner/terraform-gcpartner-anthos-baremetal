@@ -27,27 +27,18 @@ output "worker_node_ids" {
   description = "ID of worker nodes"
 }
 
-output "vlan_id" {
-  value       = 1234
-  description = "The vLan ID used for the private network"
-}
-
-output "subnet" {
-  value       = var.private_subnet
-  description = "The private IP space for the cluster"
-}
 
 output "os_image" {
   value       = var.operating_system
   description = "The OS Image used to build the nodes"
 }
 
-output "cp_vip" {
-  value       = equinix_metal_reserved_ip_block.cp_vip.network
-  description = "The CP VIP"
+output "lb_vip_subnet" {
+  value       = "${equinix_metal_reserved_ip_block.lb_vip_subnet.network}/${equinix_metal_reserved_ip_block.lb_vip_subnet.cidr}"
+  description = "The load balancer VIP network subnet"
 }
 
-output "ingress_vip" {
-  value       = equinix_metal_reserved_ip_block.ingress_vip.network
-  description = "The Ingress VIP"
+output "lb_vip_id" {
+  value       = equinix_metal_reserved_ip_block.lb_vip_subnet.id
+  description = "The load balancer VIP network id"
 }

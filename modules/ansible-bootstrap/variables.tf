@@ -36,9 +36,9 @@ variable "worker_ips" {
   description = "ips for worker nodes"
 }
 
-variable "server_subnet" {
+variable "load_balancer_subnet" {
   type        = string
-  description = "The IP space for the cluster"
+  description = "The IP space for the load balancers"
 }
 
 variable "cluster_name" {
@@ -80,16 +80,6 @@ variable "gcp_sa_keys" {
 variable "gcp_project_id" {
   type        = string
   description = "The project ID to use (Same variable for GCP and EQM)"
-}
-
-variable "cp_vip" {
-  type        = string
-  description = "The control plan VIP"
-}
-
-variable "ingress_vip" {
-  type        = string
-  description = "The ingress plan VIP"
 }
 
 variable "metal_project_id" {

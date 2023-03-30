@@ -81,16 +81,11 @@ resource "equinix_metal_bgp_session" "enable_worker_bgp" {
   address_family = "ipv4"
 }
 
-resource "equinix_metal_reserved_ip_block" "cp_vip" {
-  project_id = local.metal_project_id
-  type       = "public_ipv4"
-  metro      = var.metal_metro
-  quantity   = 1
-}
-
-resource "equinix_metal_reserved_ip_block" "ingress_vip" {
-  project_id = local.metal_project_id
-  type       = "public_ipv4"
-  metro      = var.metal_metro
-  quantity   = 1
+resource "equinix_metal_reserved_ip_block" "lb_vip_subnet" {
+  project_id  = local.metal_project_id
+  type        = "public_ipv4"
+  metro       = var.metal_metro
+  quantity    = var.metal_lb_vip_subnet_size
+  description = "${var.cluster_name}: Load Balancer VIPs 01"
+  tags        = ["cluster:${var.cluster_name}", "created_by:terraform", "created_at:${timestamp()}"]
 }

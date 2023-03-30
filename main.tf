@@ -17,6 +17,7 @@ locals {
     private_key = chomp(tls_private_key.ssh_key_pair.private_key_pem)
     public_key  = chomp(tls_private_key.ssh_key_pair.public_key_openssh)
   }
+  network_type = var.cloud == "PNAP" ? var.network_type : "public"
 }
 
 resource "local_file" "cluster_private_key_pem" {
@@ -93,23 +94,24 @@ module "PNAP_Infra" {
 }
 
 module "EQM_Infra" {
-  source                = "./modules/equinix-metal"
-  count                 = var.cloud == "EQM" ? 1 : 0
-  metal_auth_token      = var.metal_auth_token
-  metal_organization_id = var.organization_id
-  create_project        = var.create_project
-  project_name          = var.project_name
-  project_id            = var.metal_project_id
-  metal_cp_plan         = var.metal_cp_plan
-  metal_worker_plan     = var.metal_worker_plan
-  cp_node_count         = local.cp_node_count
-  worker_node_count     = var.worker_node_count
-  metal_metro           = var.metal_metro
-  operating_system      = var.operating_system
-  metal_billing_cycle   = var.metal_billing_cycle
-  cluster_name          = local.cluster_name
-  private_subnet        = var.private_subnet
-  ssh_key               = local.ssh_key
+  source                   = "./modules/equinix-metal"
+  count                    = var.cloud == "EQM" ? 1 : 0
+  metal_auth_token         = var.metal_auth_token
+  metal_organization_id    = var.organization_id
+  create_project           = var.create_project
+  project_name             = var.project_name
+  project_id               = var.metal_project_id
+  metal_cp_plan            = var.metal_cp_plan
+  metal_worker_plan        = var.metal_worker_plan
+  cp_node_count            = local.cp_node_count
+  worker_node_count        = var.worker_node_count
+  metal_metro              = var.metal_metro
+  operating_system         = var.operating_system
+  metal_billing_cycle      = var.metal_billing_cycle
+  cluster_name             = local.cluster_name
+  private_subnet           = var.private_subnet
+  ssh_key                  = local.ssh_key
+  metal_lb_vip_subnet_size = var.metal_lb_vip_subnet_size
 }
 
 locals {
@@ -118,28 +120,24 @@ locals {
   eqm_cp_ips       = var.cloud == "EQM" ? module.EQM_Infra.0.cp_node_ips : []
   eqm_worker_ips   = var.cloud == "EQM" ? module.EQM_Infra.0.worker_node_ips : []
   eqm_priv_net_id  = var.cloud == "EQM" ? "not_implemented" : ""
-  eqm_priv_vlan_id = var.cloud == "EQM" ? module.EQM_Infra.0.vlan_id : ""
-  eqm_priv_cidr    = var.cloud == "EQM" ? module.EQM_Infra.0.subnet : ""
-  eqm_pub_net_id   = var.cloud == "EQM" ? "not_implemented" : ""
-  eqm_pub_vlan_id  = var.cloud == "EQM" ? module.EQM_Infra.0.vlan_id : ""
-  eqm_pub_cidr     = var.cloud == "EQM" ? module.EQM_Infra.0.subnet : ""
+  eqm_priv_vlan_id = var.cloud == "EQM" ? "not_implemented" : ""
+  eqm_priv_subnet  = var.cloud == "EQM" ? "not_implemented" : ""
+  eqm_pub_net_id   = var.cloud == "EQM" ? module.EQM_Infra.0.lb_vip_id : ""
+  eqm_pub_vlan_id  = var.cloud == "EQM" ? "not_implemented" : ""
+  eqm_pub_subnet   = var.cloud == "EQM" ? module.EQM_Infra.0.lb_vip_subnet : ""
   eqm_os_image     = var.cloud == "EQM" ? module.EQM_Infra.0.os_image : ""
-  eqm_cp_vip       = var.cloud == "EQM" ? module.EQM_Infra.0.cp_vip : ""
-  eqm_ingress_vip  = var.cloud == "EQM" ? module.EQM_Infra.0.ingress_vip : ""
 
   gcp_ip           = var.cloud == "GCP" ? module.GCP_Infra.0.bastion_ip : ""
   gcp_user         = var.cloud == "GCP" ? module.GCP_Infra.0.username : ""
   gcp_cp_ips       = var.cloud == "GCP" ? module.GCP_Infra.0.cp_node_ips : []
   gcp_worker_ips   = var.cloud == "GCP" ? module.GCP_Infra.0.worker_node_ips : []
   gcp_priv_net_id  = var.cloud == "GCP" ? "not_implemented" : ""
-  gcp_priv_vlan_id = var.cloud == "GCP" ? module.GCP_Infra.0.vlan_id : ""
-  gcp_priv_cidr    = var.cloud == "GCP" ? module.GCP_Infra.0.subnet : ""
+  gcp_priv_vlan_id = var.cloud == "GCP" ? "not_implemented" : ""
+  gcp_priv_subnet  = var.cloud == "GCP" ? module.GCP_Infra.0.subnet : ""
   gcp_pub_net_id   = var.cloud == "GCP" ? "not_implemented" : ""
-  gcp_pub_vlan_id  = var.cloud == "GCP" ? module.GCP_Infra.0.vlan_id : ""
-  gcp_pub_cidr     = var.cloud == "GCP" ? module.GCP_Infra.0.subnet : ""
+  gcp_pub_vlan_id  = var.cloud == "GCP" ? "not_implemented" : ""
+  gcp_pub_subnet   = var.cloud == "GCP" ? module.GCP_Infra.0.subnet : ""
   gcp_os_image     = var.cloud == "GCP" ? module.GCP_Infra.0.os_image : ""
-  gcp_cp_vip       = var.cloud == "GCP" ? "not_implemented" : ""
-  gcp_ingress_vip  = var.cloud == "GCP" ? "not_implemented" : ""
 
   pnap_ip           = var.cloud == "PNAP" ? module.PNAP_Infra.0.bastion_ip : ""
   pnap_user         = var.cloud == "PNAP" ? module.PNAP_Infra.0.username : ""
@@ -147,13 +145,11 @@ locals {
   pnap_worker_ips   = var.cloud == "PNAP" ? module.PNAP_Infra.0.worker_node_ips : []
   pnap_priv_net_id  = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["private_network"].id : ""
   pnap_priv_vlan_id = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["private_network"].vlan_id : ""
-  pnap_priv_cidr    = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["private_network"].cidr : ""
+  pnap_priv_subnet  = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["private_network"].cidr : ""
   pnap_pub_net_id   = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["public_network"].id : ""
   pnap_pub_vlan_id  = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["public_network"].vlan_id : ""
-  pnap_pub_cidr     = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["public_network"].cidr : ""
+  pnap_pub_subnet   = var.cloud == "PNAP" ? module.PNAP_Infra.0.network_details["public_network"].cidr : ""
   pnap_os_image     = var.cloud == "PNAP" ? module.PNAP_Infra.0.os_image : ""
-  pnap_cp_vip       = var.cloud == "PNAP" ? "not_implemented" : ""
-  pnap_ingress_vip  = var.cloud == "PNAP" ? "not_implemented" : ""
 
   bastion_ip   = coalesce(local.eqm_ip, local.gcp_ip, local.pnap_ip)
   username     = coalesce(local.eqm_user, local.gcp_user, local.pnap_user)
@@ -161,14 +157,11 @@ locals {
   worker_ips   = var.worker_node_count > 0 ? coalescelist(local.eqm_worker_ips, local.gcp_worker_ips, local.pnap_worker_ips) : []
   priv_net_id  = coalesce(local.eqm_priv_net_id, local.gcp_priv_net_id, local.pnap_priv_net_id)
   priv_vlan_id = coalesce(local.eqm_priv_vlan_id, local.gcp_priv_vlan_id, local.pnap_priv_vlan_id)
-  priv_cidr    = coalesce(local.eqm_priv_cidr, local.gcp_priv_cidr, local.pnap_priv_cidr)
+  priv_subnet  = coalesce(local.eqm_priv_subnet, local.gcp_priv_subnet, local.pnap_priv_subnet)
   pub_net_id   = coalesce(local.eqm_pub_net_id, local.gcp_pub_net_id, local.pnap_pub_net_id)
   pub_vlan_id  = coalesce(local.eqm_pub_vlan_id, local.gcp_pub_vlan_id, local.pnap_pub_vlan_id)
-  pub_cidr     = coalesce(local.eqm_pub_cidr, local.gcp_pub_cidr, local.pnap_pub_cidr)
+  pub_subnet   = coalesce(local.eqm_pub_subnet, local.gcp_pub_subnet, local.pnap_pub_subnet)
   os_image     = coalesce(local.eqm_os_image, local.gcp_os_image, local.pnap_os_image)
-  cp_vip       = coalesce(local.eqm_cp_vip, local.gcp_cp_vip, local.pnap_cp_vip)
-  ingress_vip  = coalesce(local.eqm_ingress_vip, local.gcp_ingress_vip, local.pnap_ingress_vip)
-
 }
 
 module "Ansible_Bootstrap" {
@@ -186,7 +179,7 @@ module "Ansible_Bootstrap" {
   bastion_ip               = local.bastion_ip
   cp_ips                   = local.cp_ips
   worker_ips               = local.worker_ips
-  server_subnet            = var.network_type == "private" ? local.priv_cidr : local.pub_cidr
+  load_balancer_subnet     = var.network_type == "private" ? local.priv_subnet : local.pub_subnet
   cluster_name             = local.cluster_name
   operating_system         = var.operating_system
   username                 = local.username
@@ -195,8 +188,6 @@ module "Ansible_Bootstrap" {
   gcp_project_id           = var.gcp_project_id
   ansible_tar_ball         = var.ansible_tar_ball
   ansible_url              = var.ansible_url
-  cp_vip                   = local.cp_vip
-  ingress_vip              = local.ingress_vip
   metal_auth_token         = var.metal_auth_token
   metal_project_id         = var.metal_project_id
 }

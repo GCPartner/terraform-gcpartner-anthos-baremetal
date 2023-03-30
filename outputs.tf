@@ -26,7 +26,7 @@ output "vlan_id" {
 
 output "subnet" {
   # TODO: Could possibly remove and use `network_details` instead
-  value       = var.network_type == "private" ? local.priv_cidr : local.pub_cidr
+  value       = var.network_type == "private" ? local.priv_subnet : local.pub_subnet
   description = "The IP space for the cluster"
 }
 
@@ -54,12 +54,12 @@ output "network_details" {
     private_network = {
       id      = local.priv_net_id
       vlan_id = local.priv_vlan_id
-      cidr    = local.priv_cidr
+      cidr    = local.priv_subnet
     }
     public_network = {
       id      = local.pub_net_id
       vlan_id = local.pub_vlan_id
-      cidr    = local.pub_cidr
+      cidr    = local.pub_subnet
     }
   }
 }

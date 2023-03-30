@@ -103,11 +103,11 @@ vlan_id = "Not applicable for Google cloud"
 | <a name="input_private_subnet"></a> [private\_subnet](#input\_private\_subnet) | The private IP space for the cluster | `string` | `"172.31.254.0/24"` | no |
 | <a name="input_ha_control_plane"></a> [ha\_control\_plane](#input\_ha\_control\_plane) | Do you want a highly available control plane | `bool` | `true` | no |
 | <a name="input_worker_node_count"></a> [worker\_node\_count](#input\_worker\_node\_count) | How many worker nodes to deploy | `number` | `3` | no |
-| <a name="input_network_type"></a> [network\_type](#input\_network\_type) | Deploy the nodes on a 'private' or 'public' network. (Only supported in PNAP today) | `string` | `"public"` | no |
+| <a name="input_network_type"></a> [network\_type](#input\_network\_type) | Deploy the nodes on a 'private' or 'public' network. (Only supported in PNAP today). | `string` | `"public"` | no |
 | <a name="input_create_network"></a> [create\_network](#input\_create\_network) | Create a new network if this is 'true'. Else use provided 'p*\_network\_id' | `bool` | `true` | no |
 | <a name="input_public_network_id"></a> [public\_network\_id](#input\_public\_network\_id) | If create\_network=false, this will be the public network used for the deployment. (Only supported in PNAP today) | `string` | `"null"` | no |
 | <a name="input_private_network_id"></a> [private\_network\_id](#input\_private\_network\_id) | If create\_network=false, this will be the private network used for the deployment. (Only supported in PNAP today) | `string` | `"null"` | no |
-| <a name="input_ansible_playbook_version"></a> [ansible\_playbook\_version](#input\_ansible\_playbook\_version) | The version of the ansible playbook to install | `string` | `"v1.0.3"` | no |
+| <a name="input_ansible_playbook_version"></a> [ansible\_playbook\_version](#input\_ansible\_playbook\_version) | The version of the ansible playbook to install | `string` | `"v1.14.2-001"` | no |
 | <a name="input_ansible_url"></a> [ansible\_url](#input\_ansible\_url) | URL of the ansible code | `string` | `"https://github.com/GCPartner/ansible-gcpartner-anthos-baremetal/archive/refs/tags/v1.0.3.tar.gz"` | no |
 | <a name="input_ansible_tar_ball"></a> [ansible\_tar\_ball](#input\_ansible\_tar\_ball) | Tarball of the ansible code | `string` | `"v1.0.3.tar.gz"` | no |
 | <a name="input_pnap_client_id"></a> [pnap\_client\_id](#input\_pnap\_client\_id) | PhoenixNAP API ID | `string` | `"null"` | no |
@@ -122,10 +122,11 @@ vlan_id = "Not applicable for Google cloud"
 | <a name="input_gcp_billing_account"></a> [gcp\_billing\_account](#input\_gcp\_billing\_account) | The GCP billing account to use for the project | `string` | `"null"` | no |
 | <a name="input_metal_auth_token"></a> [metal\_auth\_token](#input\_metal\_auth\_token) | Equinix Metal API Key | `string` | `"null"` | no |
 | <a name="input_metal_project_id"></a> [metal\_project\_id](#input\_metal\_project\_id) | The project ID to use for EQM | `string` | `"null"` | no |
-| <a name="input_metal_facility"></a> [metal\_facility](#input\_metal\_facility) | Equinix Metal Facility to deploy into | `string` | `"ny5"` | no |
+| <a name="input_metal_metro"></a> [metal\_metro](#input\_metal\_metro) | Equinix Metal Facility to deploy into | `string` | `"ny"` | no |
 | <a name="input_metal_cp_plan"></a> [metal\_cp\_plan](#input\_metal\_cp\_plan) | Equinix Metal device type to deploy for cp nodes | `string` | `"c3.small.x86"` | no |
 | <a name="input_metal_worker_plan"></a> [metal\_worker\_plan](#input\_metal\_worker\_plan) | Equinix Metal device type to deploy for worker nodes | `string` | `"c3.small.x86"` | no |
 | <a name="input_metal_billing_cycle"></a> [metal\_billing\_cycle](#input\_metal\_billing\_cycle) | How the node will be billed (Not usually changed) | `string` | `"hourly"` | no |
+| <a name="input_metal_lb_vip_subnet_size"></a> [metal\_lb\_vip\_subnet\_size](#input\_metal\_lb\_vip\_subnet\_size) | The number of IPs to have for Load Balancer VIPs (2 are used for Control Plane and Ingress VIPs) | `number` | `8` | no |
 
 ## Outputs
 

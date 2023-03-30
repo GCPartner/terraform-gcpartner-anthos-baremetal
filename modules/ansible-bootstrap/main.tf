@@ -111,15 +111,13 @@ resource "null_resource" "write_ansible_inventory_header" {
   provisioner "remote-exec" {
     inline = [
       "echo '[all:vars]' > $HOME/bootstrap/${local.git_repo_name}/inventory",
-      "echo 'private_subnet=${var.server_subnet}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
+      "echo 'load_balancer_subnet=${var.load_balancer_subnet}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'cluster_name=${var.cluster_name}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'username=${var.username}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'cp_node_count=${var.cp_node_count}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'worker_node_count=${var.worker_node_count}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'gcp_project_id=${var.gcp_project_id}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'cloud=${var.cloud}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
-      "echo 'cp_vip=${var.cp_vip}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
-      "echo 'ingress_vip=${var.ingress_vip}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'eqm_auth_token=${var.metal_auth_token}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo 'eqm_project_id=${var.metal_project_id}' >> $HOME/bootstrap/${local.git_repo_name}/inventory",
       "echo home_path=$HOME >> $HOME/bootstrap/${local.git_repo_name}/inventory",
@@ -131,30 +129,7 @@ resource "null_resource" "write_ansible_inventory_header" {
 }
 
 resource "null_resource" "write_cp_nodes_to_ansible_inventory" {
-  # Only run this if the cloud IS NOT Equinix Metal
-  count = var.cloud != "EQM" ? var.cp_node_count : 0
-  depends_on = [
-    null_resource.write_ansible_inventory_header
-  ]
-
-  connection {
-    type        = "ssh"
-    user        = var.username
-    private_key = var.ssh_key.private_key
-    host        = var.bastion_ip
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sleep ${count.index + 1}",
-      "echo '${var.cp_ips[count.index]}' >> $HOME/bootstrap/${local.git_repo_name}/inventory"
-    ]
-  }
-}
-
-resource "null_resource" "write_eqm_cp_nodes_to_ansible_inventory" {
-  # Only run this if the cloud IS Equinix Metal
-  count = var.cloud == "EQM" ? var.cp_node_count : 0
+  count = var.cp_node_count
   depends_on = [
     null_resource.write_ansible_inventory_header
   ]
@@ -176,8 +151,7 @@ resource "null_resource" "write_eqm_cp_nodes_to_ansible_inventory" {
 
 resource "null_resource" "write_worker_header_to_ansible_inventory" {
   depends_on = [
-    null_resource.write_cp_nodes_to_ansible_inventory,
-    null_resource.write_eqm_cp_nodes_to_ansible_inventory
+    null_resource.write_cp_nodes_to_ansible_inventory
   ]
 
   connection {
@@ -195,30 +169,7 @@ resource "null_resource" "write_worker_header_to_ansible_inventory" {
 }
 
 resource "null_resource" "write_worker_nodes_to_ansible_inventory" {
-  # Only run this if the cloud IS NOT Equinix Metal
-  count = var.cloud != "EQM" ? var.worker_node_count : 0
-  depends_on = [
-    null_resource.write_worker_header_to_ansible_inventory
-  ]
-
-  connection {
-    type        = "ssh"
-    user        = var.username
-    private_key = var.ssh_key.private_key
-    host        = var.bastion_ip
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sleep ${count.index + 1}",
-      "echo '${var.worker_ips[count.index]}' >> $HOME/bootstrap/${local.git_repo_name}/inventory"
-    ]
-  }
-}
-
-resource "null_resource" "write_eqm_worker_nodes_to_ansible_inventory" {
-  # Only run this if the cloud IS Equinix Metal
-  count = var.cloud == "EQM" ? var.worker_node_count : 0
+  count = var.worker_node_count
   depends_on = [
     null_resource.write_worker_header_to_ansible_inventory
   ]
@@ -248,7 +199,6 @@ resource "null_resource" "execute_ansible" {
   depends_on = [
     null_resource.download_ansible_playbook,
     null_resource.write_worker_nodes_to_ansible_inventory,
-    null_resource.write_eqm_worker_nodes_to_ansible_inventory,
     null_resource.install_ansible,
     null_resource.write_gcp_sa_keys
   ]

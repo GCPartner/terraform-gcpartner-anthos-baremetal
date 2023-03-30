@@ -74,3 +74,12 @@ variable "private_subnet" {
   type        = string
   description = "The private IP space for the cluster"
 }
+
+variable "metal_lb_vip_subnet_size" {
+  type        = number
+  description = "The number of IPs to have for Load Balancer VIPs (2 are used for Control Plane and Ingress VIPs)"
+  validation {
+    condition     = var.metal_lb_vip_subnet_size > 1
+    error_message = "The minimum number of IPs is 2."
+  }
+}

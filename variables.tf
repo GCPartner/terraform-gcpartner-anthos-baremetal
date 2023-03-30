@@ -55,7 +55,7 @@ variable "worker_node_count" {
 variable "network_type" {
   type        = string
   default     = "public"
-  description = "Deploy the nodes on a 'private' or 'public' network. (Only supported in PNAP today)"
+  description = "Deploy the nodes on a 'private' or 'public' network. (Only supported in PNAP today)."
 }
 
 variable "create_network" {
@@ -193,4 +193,10 @@ variable "metal_billing_cycle" {
   type        = string
   default     = "hourly"
   description = "How the node will be billed (Not usually changed)"
+}
+
+variable "metal_lb_vip_subnet_size" {
+  type        = number
+  description = "The number of IPs to have for Load Balancer VIPs (2 are used for Control Plane and Ingress VIPs)"
+  default     = 8
 }
