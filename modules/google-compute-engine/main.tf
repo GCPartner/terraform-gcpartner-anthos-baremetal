@@ -168,30 +168,6 @@ resource "google_compute_attached_disk" "default" {
   instance = element(google_compute_instance.cp_node.*.id, floor((count.index / var.worker_node_count) + 4)) # Test for +4
 }
 
-data "template_file" "cp_node_networking" {
-  count    = var.cp_node_count
-  template = file("${path.module}/templates/node_networking.py")
-  vars = {
-    local_ip             = element(google_compute_instance.cp_node.*.network_interface.0.network_ip, count.index)
-    gre_ip_cidr          = format("%s/%s", cidrhost(var.private_subnet, count.index + 2), split("/", var.private_subnet).1)
-    cp_local_ip_list     = jsonencode(google_compute_instance.cp_node.*.network_interface.0.network_ip)
-    worker_local_ip_list = jsonencode(google_compute_instance.worker_node.*.network_interface.0.network_ip)
-    gre_cidr             = var.private_subnet
-  }
-}
-
-data "template_file" "worker_node_networking" {
-  count    = var.worker_node_count
-  template = file("${path.module}/templates/node_networking.py")
-  vars = {
-    local_ip             = element(google_compute_instance.worker_node.*.network_interface.0.network_ip, count.index)
-    gre_ip_cidr          = format("%s/%s", cidrhost(var.private_subnet, count.index + 5), split("/", var.private_subnet).1)
-    cp_local_ip_list     = jsonencode(google_compute_instance.cp_node.*.network_interface.0.network_ip)
-    worker_local_ip_list = jsonencode(google_compute_instance.worker_node.*.network_interface.0.network_ip)
-    gre_cidr             = var.private_subnet
-  }
-}
-
 resource "null_resource" "cp_node_networking" {
   count = var.cp_node_count
   connection {
@@ -207,7 +183,13 @@ resource "null_resource" "cp_node_networking" {
   }
 
   provisioner "file" {
-    content     = element(data.template_file.cp_node_networking.*.rendered, count.index)
+    content = templatefile("${path.module}/templates/node_networking.py", {
+      local_ip             = element(google_compute_instance.cp_node.*.network_interface.0.network_ip, count.index)
+      gre_ip_cidr          = format("%s/%s", cidrhost(var.private_subnet, count.index + 2), split("/", var.private_subnet).1)
+      cp_local_ip_list     = jsonencode(google_compute_instance.cp_node.*.network_interface.0.network_ip)
+      worker_local_ip_list = jsonencode(google_compute_instance.worker_node.*.network_interface.0.network_ip)
+      gre_cidr             = var.private_subnet
+    })
     destination = "/home/${local.username}/bootstrap/node_networking.py"
   }
 
@@ -231,7 +213,13 @@ resource "null_resource" "worker_node_networking" {
   }
 
   provisioner "file" {
-    content     = element(data.template_file.worker_node_networking.*.rendered, count.index)
+    content = templatefile("${path.module}/templates/node_networking.py", {
+      local_ip             = element(google_compute_instance.worker_node.*.network_interface.0.network_ip, count.index)
+      gre_ip_cidr          = format("%s/%s", cidrhost(var.private_subnet, count.index + 5), split("/", var.private_subnet).1)
+      cp_local_ip_list     = jsonencode(google_compute_instance.cp_node.*.network_interface.0.network_ip)
+      worker_local_ip_list = jsonencode(google_compute_instance.worker_node.*.network_interface.0.network_ip)
+      gre_cidr             = var.private_subnet
+    })
     destination = "/home/${local.username}/bootstrap/node_networking.py"
   }
 
